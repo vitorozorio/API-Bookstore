@@ -3,7 +3,7 @@
 ## **Diagrama de casos de uso**
 
 <p align="center">
-<img src="https://i.imgur.com/ePI7bYK.png">
+<img src="https://i.imgur.com/JYFUihl.jpeg">
 </p>
 
 
