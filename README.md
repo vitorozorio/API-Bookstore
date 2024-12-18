@@ -6,4 +6,10 @@
 <img src="https://i.imgur.com/JYFUihl.jpeg">
 </p>
 
+## **Diagrama de componentes**
+
+<p align="center">
+<img src="https://i.imgur.com/XDKDAjs.jpeg">
+</p>
+
 
