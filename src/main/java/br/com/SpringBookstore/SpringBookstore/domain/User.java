@@ -1,4 +1,4 @@
-package br.com.Spring_Bookstore.Spring_Bookstore.domain;
+package br.com.SpringBookstore.SpringBookstore.domain;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
@@ -21,12 +21,6 @@ public class User implements Serializable {
     private String password;
     private String email;
     private Integer level;
-
-    @DBRef(lazy = true)
-    private List<Book> books = new ArrayList<>();
-
-
-
 
 
 }
