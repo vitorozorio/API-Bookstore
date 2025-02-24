@@ -1,169 +1,102 @@
-# Classes de um Sistema de Biblioteca
+# Modelo de Sistema de Biblioteca
 
-Para modelar um sistema de biblioteca que inclui livros, autores, usuários, funcionários, níveis de permissão e suporte técnico, é necessário identificar as principais entidades (classes) e suas responsabilidades. Abaixo estão as possíveis classes que podem ser definidas para esse sistema:
+Este documento descreve as classes, atributos, métodos e relacionamentos de um sistema de biblioteca simplificado. A classe **Suporte Técnico** foi removida para focar nas entidades essenciais.
 
----
+## **Classes Principais**
+- **Livro**
+- **Autor**
+- **Usuário**
+- **Funcionário**
+- **Nível de Permissão**
+- **Empréstimo**
+- **Categoria**
+- **Reserva**
+- **Sistema**
 
-## **1. Livro**
-- **Responsabilidade**: Representar os livros disponíveis na biblioteca.
-- **Atributos**:
-  - `id` (identificador único)
-  - `titulo`
-  - `isbn`
-  - `anoPublicacao`
-  - `editora`
-  - `quantidadeDisponivel`
-  - `categoria` (ficção, não-ficção, etc.)
-  - `status` (disponível, emprestado, reservado)
-- **Métodos**:
-  - `emprestar()`
-  - `devolver()`
-  - `reservar()`
+## **Relacionamentos Revisitados**
 
----
+### **1. Livro ↔ Autor**
+- **Relacionamento:** Um livro pode ter um ou mais autores, e um autor pode escrever um ou mais livros.
+- **Cardinalidade:** Muitos-para-Muitos *(N:N)*.
+- **Implementação:** Tabela intermediária `LivroAutor`:
+  ```
+  livro_id
+  autor_id
+  ```
 
-## **2. Autor**
-- **Responsabilidade**: Representar os autores dos livros.
-- **Atributos**:
-  - `id` (identificador único)
-  - `nome`
-  - `nacionalidade`
-  - `dataNascimento`
-  - `biografia`
-- **Métodos**:
-  - `adicionarLivro(Livro livro)`
-  - `listarLivros()`
+### **2. Usuário ↔ Empréstimo**
+- **Relacionamento:** Um usuário pode ter vários empréstimos, mas cada empréstimo pertence a um único usuário.
+- **Cardinalidade:** Um-para-Muitos *(1:N)*.
+- **Implementação:** A classe `Emprestimo` possui uma chave estrangeira (`usuario_id`) que referencia a classe `Usuario`.
 
----
+### **3. Livro ↔ Empréstimo**
+- **Relacionamento:** Um livro pode estar associado a vários empréstimos (em diferentes momentos), mas cada empréstimo envolve um único livro.
+- **Cardinalidade:** Um-para-Muitos *(1:N)*.
+- **Implementação:** A classe `Emprestimo` possui uma chave estrangeira (`livro_id`) que referencia a classe `Livro`.
 
-## **3. Usuário**
-- **Responsabilidade**: Representar os usuários do sistema que podem emprestar livros.
-- **Atributos**:
-  - `id` (identificador único)
-  - `nome`
-  - `email`
-  - `telefone`
-  - `endereco`
-  - `dataCadastro`
-  - `historicoEmprestimos` (lista de empréstimos realizados)
-- **Métodos**:
-  - `emprestarLivro(Livro livro)`
-  - `devolverLivro(Livro livro)`
-  - `verHistoricoEmprestimos()`
+### **4. Funcionário ↔ Nível de Permissão**
+- **Relacionamento:** Um funcionário tem um nível de permissão, e um nível de permissão pode ser atribuído a vários funcionários.
+- **Cardinalidade:** Muitos-para-Um *(N:1)*.
+- **Implementação:** A classe `Funcionario` possui uma chave estrangeira (`nivelPermissao_id`) que referencia a classe `NivelPermissao`.
 
----
+### **5. Categoria ↔ Livro**
+- **Relacionamento:** Uma categoria pode conter vários livros, e um livro pertence a uma única categoria.
+- **Cardinalidade:** Um-para-Muitos *(1:N)*.
+- **Implementação:** A classe `Livro` possui uma chave estrangeira (`categoria_id`) que referencia a classe `Categoria`.
 
-## **4. Funcionário**
-- **Responsabilidade**: Representar os funcionários que gerenciam a biblioteca.
-- **Atributos**:
-  - `id` (identificador único)
-  - `nome`
-  - `cargo` (bibliotecário, gerente, etc.)
-  - `nivelPermissao` (leitura, escrita, administração)
-  - `dataContratacao`
-- **Métodos**:
-  - `cadastrarLivro(Livro livro)`
-  - `removerLivro(Livro livro)`
-  - `gerenciarUsuarios()`
-  - `atualizarEstoqueLivros()`
+### **6. Reserva ↔ Usuário e Livro**
+- **Relacionamento:**
+  - Um usuário pode fazer várias reservas.
+  - Um livro pode ter várias reservas.
+- **Cardinalidade:** Muitos-para-Muitos *(N:N)*.
+- **Implementação:** Tabela intermediária `Reserva`:
+  ```
+  usuario_id
+  livro_id
+  dataReserva
+  status
+  ```
+
+### **7. Sistema ↔ Outras Classes**
+- **Relacionamento:** O sistema centraliza todas as operações e mantém listas de entidades como usuários, livros, funcionários, etc.
+- **Cardinalidade:** Um-para-Muitos *(1:N)* para cada entidade.
+- **Implementação:** O sistema não precisa de chaves estrangeiras, pois ele atua como um controlador central.
 
 ---
 
-## **5. Nível de Permissão**
-- **Responsabilidade**: Definir os diferentes níveis de acesso ao sistema.
-- **Atributos**:
-  - `id` (identificador único)
-  - `descricao` (leitor, funcionário, administrador, etc.)
-  - `permissoes` (lista de ações permitidas, como "emprestar", "editar", "excluir")
-- **Métodos**:
-  - `verificarPermissao(acao)`
-  - `atribuirPermissao(Usuario usuario)`
+## **Diagrama de Classes Simplificado**
 
----
+```plaintext
++----------------+       +----------------+       +----------------+
+|     Livro      |<>-----|   LivroAutor   |<>-----|     Autor      |
++----------------+       +----------------+       +----------------+
+| - id           |       | - livro_id     |       | - id           |
+| - titulo       |       | - autor_id     |       | - nome         |
+| - isbn         |       +----------------+       | - nacionalidade|
++----------------+                                 +----------------+
 
-## **6. Suporte Técnico**
-- **Responsabilidade**: Gerenciar problemas técnicos e manutenção do sistema.
-- **Atributos**:
-  - `id` (identificador único)
-  - `nome`
-  - `contato`
-  - `chamadosAbertos` (lista de chamados técnicos)
-- **Métodos**:
-  - `abrirChamado(descricao)`
-  - `fecharChamado(idChamado)`
-  - `listarChamados()`
++----------------+       +----------------+       +----------------+
+|    Usuario     |<>-----|   Emprestimo   |<>-----|     Livro      |
++----------------+       +----------------+       +----------------+
+| - id           |       | - id           |       | - id           |
+| - nome         |       | - usuario_id   |       | - titulo       |
++----------------+       | - livro_id     |       +----------------+
+                         +----------------+
 
----
++----------------+       +----------------+       +----------------+
+|  Funcionario   |<>-----| NivelPermissao |       |    Categoria   |
++----------------+       +----------------+       +----------------+
+| - id           |       | - id           |       | - id           |
+| - nivelPermissao_id|   | - descricao    |       | - nome         |
++----------------+       +----------------+       +----------------+
 
-## **7. Empréstimo**
-- **Responsabilidade**: Representar o relacionamento entre usuários e livros emprestados.
-- **Atributos**:
-  - `id` (identificador único)
-  - `usuario` (referência ao usuário que pegou o livro)
-  - `livro` (referência ao livro emprestado)
-  - `dataEmprestimo`
-  - `dataDevolucaoPrevista`
-  - `dataDevolucaoReal`
-  - `status` (ativo, devolvido, atrasado)
-- **Métodos**:
-  - `calcularMulta()`
-  - `renovarEmprestimo()`
++----------------+       +----------------+       +----------------+
+|    Reserva     |<>-----|     Livro      |       |    Usuario     |
++----------------+       +----------------+       +----------------+
+| - id           |       | - id           |       | - id           |
+| - usuario_id   |       | - titulo       |       | - nome         |
+| - livro_id     |       +----------------+       +----------------+
++----------------+
+```
 
----
 
-## **8. Categoria**
-- **Responsabilidade**: Classificar os livros por categorias.
-- **Atributos**:
-  - `id` (identificador único)
-  - `nome` (ficção, romance, ciência, etc.)
-  - `descricao`
-- **Métodos**:
-  - `adicionarLivro(Livro livro)`
-  - `listarLivros()`
-
----
-
-## **9. Reserva**
-- **Responsabilidade**: Gerenciar reservas de livros pelos usuários.
-- **Atributos**:
-  - `id` (identificador único)
-  - `usuario` (referência ao usuário que fez a reserva)
-  - `livro` (referência ao livro reservado)
-  - `dataReserva`
-  - `status` (ativa, cancelada, concluída)
-- **Métodos**:
-  - `cancelarReserva()`
-  - `confirmarReserva()`
-
----
-
-## **10. Sistema**
-- **Responsabilidade**: Centralizar o gerenciamento de todas as operações do sistema.
-- **Atributos**:
-  - `usuarios` (lista de usuários cadastrados)
-  - `livros` (lista de livros disponíveis)
-  - `funcionarios` (lista de funcionários)
-  - `emprestimos` (lista de empréstimos ativos)
-  - `reservas` (lista de reservas ativas)
-- **Métodos**:
-  - `cadastrarUsuario(Usuario usuario)`
-  - `cadastrarLivro(Livro livro)`
-  - `realizarEmprestimo(Usuario usuario, Livro livro)`
-  - `processarDevolucao(Emprestimo emprestimo)`
-  - `gerarRelatorio()`
-
----
-
-### Relacionamentos entre Classes
-1. **Livro-Autor**: Um livro pode ter um ou mais autores (relação muitos-para-muitos).
-2. **Usuário-Emprestimo**: Um usuário pode ter vários empréstimos (relação um-para-muitos).
-3. **Livro-Emprestimo**: Um livro pode estar associado a vários empréstimos (relação um-para-muitos).
-4. **Funcionário-Nível de Permissão**: Um funcionário tem um nível de permissão (relação um-para-um).
-5. **Suporte Técnico-Chamado**: Um suporte técnico pode gerenciar vários chamados (relação um-para-muitos).
-
----
-
-### Conclusão
-O modelo acima abrange as principais entidades necessárias para um sistema de biblioteca robusto. Cada classe foi projetada com atributos e métodos que refletem suas responsabilidades no sistema. Dependendo da complexidade do projeto, outras classes ou refinamentos podem ser adicionados, como **Notificação** (para avisos de devolução), **Relatórios** (para análise de uso) ou **Configurações do Sistema** (para personalização). 
-
-**Resposta Final**: As possíveis classes são: **Livro**, **Autor**, **Usuário**, **Funcionário**, **Nível de Permissão**, **Suporte Técnico**, **Empréstimo**, **Categoria**, **Reserva** e **Sistema**.
