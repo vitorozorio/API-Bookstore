@@ -64,39 +64,57 @@ Este documento descreve as classes, atributos, métodos e relacionamentos de um 
 
 ---
 
-## **Diagrama de Classes Simplificado**
 
+## **Class Diagram**
 ```plaintext
-+----------------+       +----------------+       +----------------+
-|     Livro      |<>-----|   LivroAutor   |<>-----|     Autor      |
-+----------------+       +----------------+       +----------------+
-| - id           |       | - livro_id     |       | - id           |
-| - titulo       |       | - autor_id     |       | - nome         |
-| - isbn         |       +----------------+       | - nacionalidade|
-+----------------+                                 +----------------+
++------------------+       +------------------+       +------------------+
+|      Book       |<>-----|    BookAuthor    |<>-----|      Author      |
++------------------+       +------------------+       +------------------+
+| - id            |       | - book_id        |       | - id             |
+| - title         |       | - author_id      |       | - name           |
+| - isbn          |       +------------------+       | - nationality    |
+| - publicationYear |                                | - birthDate      |
+| - publisher     |                                | - biography      |
+| - availableQuantity |                             +------------------+
+| - category      |
+| - status        |
++------------------+
 
-+----------------+       +----------------+       +----------------+
-|    Usuario     |<>-----|   Emprestimo   |<>-----|     Livro      |
-+----------------+       +----------------+       +----------------+
-| - id           |       | - id           |       | - id           |
-| - nome         |       | - usuario_id   |       | - titulo       |
-+----------------+       | - livro_id     |       +----------------+
-                         +----------------+
++------------------+       +------------------+       +------------------+
+|      User       |<>-----|      Loan       |<>-----|       Book       |
++------------------+       +------------------+       +------------------+
+| - id            |       | - id             |       | - id             |
+| - name          |       | - user_id        |       | - title          |
+| - email         |       | - book_id        |       | - isbn           |
+| - phone         |       | - loanDate       |       | - publicationYear |
+| - address       |       | - expectedReturnDate |   | - publisher      |
+| - registrationDate |     | - actualReturnDate  |   | - availableQuantity |
+| - loanHistory   |       | - status         |       | - category       |
++------------------+       +------------------+       | - status        |
+                                                  +------------------+
 
-+----------------+       +----------------+       +----------------+
-|  Funcionario   |<>-----| NivelPermissao |       |    Categoria   |
-+----------------+       +----------------+       +----------------+
-| - id           |       | - id           |       | - id           |
-| - nivelPermissao_id|   | - descricao    |       | - nome         |
-+----------------+       +----------------+       +----------------+
++------------------+       +------------------+       +------------------+
+|   Employee      |<>-----| PermissionLevel |       |     Category     |
++------------------+       +------------------+       +------------------+
+| - id            |       | - id             |       | - id             |
+| - name          |       | - description    |       | - name           |
+| - role          |       | - permissions    |       | - description    |
+| - permissionLevel |      +------------------+       +------------------+
+| - hireDate      |
++------------------+
 
-+----------------+       +----------------+       +----------------+
-|    Reserva     |<>-----|     Livro      |       |    Usuario     |
-+----------------+       +----------------+       +----------------+
-| - id           |       | - id           |       | - id           |
-| - usuario_id   |       | - titulo       |       | - nome         |
-| - livro_id     |       +----------------+       +----------------+
-+----------------+
-```
++------------------+       +------------------+       +------------------+
+|   Reservation   |<>-----|       Book       |<>-----|      User       |
++------------------+       +------------------+       +------------------+
+| - id            |       | - id             |       | - id             |
+| - user_id       |       | - title          |       | - name           |
+| - book_id       |       | - isbn           |       | - email          |
+| - reservationDate |      | - publicationYear |      | - phone         |
+| - status        |       | - publisher      |       | - address        |
++------------------+       | - availableQuantity |    | - registrationDate |
+                        | - category       |       +------------------+
+                        | - status        |
+                        +------------------+
+
 
 
