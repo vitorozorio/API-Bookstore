@@ -116,5 +116,10 @@ Este documento descreve as classes, atributos, métodos e relacionamentos de um 
                         | - status        |
                         +------------------+
 
-
-
++----------------+       +----------------+
+|   Publisher   |<>-----|     Book       |
++----------------+       +----------------+
+| - id          |       | - id           |
+| - name        |       | - title        |
+| - address     |       | - publisher_id |
++----------------+       +----------------+
