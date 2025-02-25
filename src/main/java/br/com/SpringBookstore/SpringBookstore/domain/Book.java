@@ -18,8 +18,7 @@ public class Book implements Serializable {
     private Date yearPublication;
     private Integer quantityAvailable;
     private Author author;
-
-    // categoria
+    private Category category;
 
     // editora nova classe
 
