@@ -1,125 +1,190 @@
-# Modelo de Sistema de Biblioteca
+# **Documentação do Sistema de Biblioteca**
 
-Este documento descreve as classes, atributos, métodos e relacionamentos de um sistema de biblioteca simplificado. A classe **Suporte Técnico** foi removida para focar nas entidades essenciais.
-
-## **Classes Principais**
-- **Livro**
-- **Autor**
-- **Usuário**
-- **Funcionário**
-- **Nível de Permissão**
-- **Empréstimo**
-- **Categoria**
-- **Reserva**
-- **Sistema**
-
-## **Relacionamentos Revisitados**
-
-### **1. Livro ↔ Autor**
-- **Relacionamento:** Um livro pode ter um ou mais autores, e um autor pode escrever um ou mais livros.
-- **Cardinalidade:** Muitos-para-Muitos *(N:N)*.
-- **Implementação:** Tabela intermediária `LivroAutor`:
-  ```
-  livro_id
-  autor_id
-  ```
-
-### **2. Usuário ↔ Empréstimo**
-- **Relacionamento:** Um usuário pode ter vários empréstimos, mas cada empréstimo pertence a um único usuário.
-- **Cardinalidade:** Um-para-Muitos *(1:N)*.
-- **Implementação:** A classe `Emprestimo` possui uma chave estrangeira (`usuario_id`) que referencia a classe `Usuario`.
-
-### **3. Livro ↔ Empréstimo**
-- **Relacionamento:** Um livro pode estar associado a vários empréstimos (em diferentes momentos), mas cada empréstimo envolve um único livro.
-- **Cardinalidade:** Um-para-Muitos *(1:N)*.
-- **Implementação:** A classe `Emprestimo` possui uma chave estrangeira (`livro_id`) que referencia a classe `Livro`.
-
-### **4. Funcionário ↔ Nível de Permissão**
-- **Relacionamento:** Um funcionário tem um nível de permissão, e um nível de permissão pode ser atribuído a vários funcionários.
-- **Cardinalidade:** Muitos-para-Um *(N:1)*.
-- **Implementação:** A classe `Funcionario` possui uma chave estrangeira (`nivelPermissao_id`) que referencia a classe `NivelPermissao`.
-
-### **5. Categoria ↔ Livro**
-- **Relacionamento:** Uma categoria pode conter vários livros, e um livro pertence a uma única categoria.
-- **Cardinalidade:** Um-para-Muitos *(1:N)*.
-- **Implementação:** A classe `Livro` possui uma chave estrangeira (`categoria_id`) que referencia a classe `Categoria`.
-
-### **6. Reserva ↔ Usuário e Livro**
-- **Relacionamento:**
-  - Um usuário pode fazer várias reservas.
-  - Um livro pode ter várias reservas.
-- **Cardinalidade:** Muitos-para-Muitos *(N:N)*.
-- **Implementação:** Tabela intermediária `Reserva`:
-  ```
-  usuario_id
-  livro_id
-  dataReserva
-  status
-  ```
-
-### **7. Sistema ↔ Outras Classes**
-- **Relacionamento:** O sistema centraliza todas as operações e mantém listas de entidades como usuários, livros, funcionários, etc.
-- **Cardinalidade:** Um-para-Muitos *(1:N)* para cada entidade.
-- **Implementação:** O sistema não precisa de chaves estrangeiras, pois ele atua como um controlador central.
+Este documento apresenta o modelo de dados do Sistema de Gerenciamento de Biblioteca. Ele inclui entidades principais, como livros, autores, usuários, avaliações, empréstimos e reservas, e explica como elas interagem entre si.
 
 ---
 
+## **Entidades Principais e Relacionamentos**
 
-## **Class Diagram**
-```plaintext
-+------------------+       +------------------+       +------------------+
-|      Book       |<>-----|    BookAuthor    |<>-----|      Author      |
-+------------------+       +------------------+       +------------------+
-| - id            |       | - book_id        |       | - id             |
-| - title         |       | - author_id      |       | - name           |
-| - isbn          |       +------------------+       | - nationality    |
-| - publicationYear |                                | - birthDate      |
-| - publisher     |                                | - biography      |
-| - availableQuantity |                             +------------------+
-| - category      |
-| - status        |
-+------------------+
+### **1. Book (Livro)**
 
-+------------------+       +------------------+       +------------------+
-|      User       |<>-----|      Loan       |<>-----|       Book       |
-+------------------+       +------------------+       +------------------+
-| - id            |       | - id             |       | - id             |
-| - name          |       | - user_id        |       | - title          |
-| - email         |       | - book_id        |       | - isbn           |
-| - phone         |       | - loanDate       |       | - publicationYear |
-| - address       |       | - expectedReturnDate |   | - publisher      |
-| - registrationDate |     | - actualReturnDate  |   | - availableQuantity |
-| - loanHistory   |       | - status         |       | - category       |
-+------------------+       +------------------+       | - status        |
-                                                  +------------------+
+- **Descrição**: Representa um livro na biblioteca.
+- **Relacionamentos**:
+  - **Autores**: Relação muitos-para-muitos com `Author`.
+  - **Avaliações**: Uma lista de `Review`.
+  - **Empréstimos**: Associado a `Loan`.
+  - **Reservas**: Associado a `Reservation`.
+  - **Categoria**: Associação (1 para N) com `Category`.
 
-+------------------+       +------------------+       +------------------+
-|   Employee      |<>-----| PermissionLevel |       |     Category     |
-+------------------+       +------------------+       +------------------+
-| - id            |       | - id             |       | - id             |
-| - name          |       | - description    |       | - name           |
-| - role          |       | - permissions    |       | - description    |
-| - permissionLevel |      +------------------+       +------------------+
-| - hireDate      |
-+------------------+
+#### **Atributos**:
+- `id`: Identificador único do livro.
+- `title`: Título do livro.
+- `isbn`: Código ISBN.
+- `publicationYear`: Ano de publicação.
+- `publisher`: Nome da editora.
+- `availableQuantity`: Quantidade disponível para empréstimos.
+- `status`: Status do livro (`AVAILABLE`, `RESERVED`, `LOANED`, `DAMAGED`, `LOST`).
+- **Referências**:
+  - `authors` → Lista de autores ligados ao livro.
+  - `reviews` → Lista de avaliações.
+  - `category` → Referência à categoria do livro.
 
-+------------------+       +------------------+       +------------------+
-|   Reservation   |<>-----|       Book       |<>-----|      User       |
-+------------------+       +------------------+       +------------------+
-| - id            |       | - id             |       | - id             |
-| - user_id       |       | - title          |       | - name           |
-| - book_id       |       | - isbn           |       | - email          |
-| - reservationDate |      | - publicationYear |      | - phone         |
-| - status        |       | - publisher      |       | - address        |
-+------------------+       | - availableQuantity |    | - registrationDate |
-                        | - category       |       +------------------+
-                        | - status        |
-                        +------------------+
+---
 
-+----------------+       +----------------+
-|   Publisher   |<>-----|     Book       |
-+----------------+       +----------------+
-| - id          |       | - id           |
-| - name        |       | - title        |
-| - address     |       | - publisher_id |
-+----------------+       +----------------+
+### **2. Author (Autor)**
+
+- **Descrição**: Representa os autores dos livros.
+- **Relacionamentos**:
+  - Um autor pode escrever vários livros (relação muitos-para-muitos com `Book`).
+
+#### **Atributos**:
+- `id`: Identificador único do autor.
+- `name`: Nome do autor.
+- `nationality`: Nacionalidade.
+- `biography`: Biografia do autor (opcional).
+- `books`: Lista de livros escritos pelo autor.
+
+---
+
+### **3. Category (Categoria)**
+
+- **Descrição**: Representa uma categoria ou gênero de livro, como Ficção, Não Ficção, etc.
+- **Relacionamentos**:
+  - Uma categoria pode conter vários livros.
+
+#### **Atributos**:
+- `id`: Identificador único.
+- `name`: Nome da categoria.
+
+---
+
+### **4. Review (Avaliação)**
+
+- **Descrição**: Representa a avaliação de um livro feita por um usuário.
+- **Relacionamentos**:
+  - `user` → Usuário que fez a avaliação.
+  - `book` → Livro avaliado.
+
+#### **Atributos**:
+- `id`: Identificador único da avaliação.
+- `comment`: Comentário sobre o livro.
+- `rating`: Nota do livro (`1` a `5`).
+
+---
+
+### **5. Loan (Empréstimo)**
+
+- **Descrição**: Representa o empréstimo de um livro por um usuário.
+- **Relacionamentos**:
+  - `user` → Usuário que solicitou o empréstimo.
+  - `book` → Livro emprestado.
+
+#### **Atributos**:
+- `id`: Identificador único.
+- `loanDate`: Data do empréstimo.
+- `expectedReturnDate`: Data esperada para devolução.
+- `actualReturnDate`: Data de devolução (se devolvido).
+- `status`: Status do empréstimo (`ACTIVE`, `RETURNED`, `OVERDUE`).
+
+---
+
+### **6. Reservation (Reserva)**
+
+- **Descrição**: Representa a reserva de um livro feita por um usuário.
+- **Relacionamentos**:
+  - `user` → Usuário que realizou a reserva.
+  - `book` → Livro reservado.
+
+#### **Atributos**:
+- `id`: Identificador único.
+- `reservationDate`: Data da reserva.
+- `status`: Status da reserva (`PENDING`, `COMPLETED`, `CANCELLED`).
+
+---
+
+### **7. User (Usuário)**
+
+- **Descrição**: Representa os usuários do sistema, como leitores, que interagem com os livros.
+- **Relacionamentos**:
+  - `loans` → Lista de empréstimos (`Loan`).
+  - `reservations` → Lista de reservas (`Reservation`).
+  - `reviews` → Lista de avaliações (`Review`).
+
+#### **Atributos**:
+- `id`: Identificador único do usuário.
+- `name`: Nome do usuário.
+- `email`: E-mail do usuário.
+- `phoneNumber`: Número de telefone.
+- `address`: Endereço físico.
+
+---
+
+### **8. Employee (Funcionário)**
+
+- **Descrição**: Representa os funcionários que administram o sistema (ex.: bibliotecários).
+
+#### **Atributos**:
+- `id`: Identificador único.
+- `name`: Nome do funcionário.
+- `email`: E-mail do funcionário.
+- `role`: Cargo ou função do funcionário.
+
+---
+
+## **Enums no Sistema**
+
+### **1. BookStatus**
+Definição do estado atual do livro:
+- `AVAILABLE`: Disponível para empréstimos.
+- `RESERVED`: Reservado.
+- `LOANED`: Emprestado.
+- `DAMAGED`: Danificado.
+- `LOST`: Perdido.
+
+### **2. LoanStatus**
+Status do empréstimo:
+- `ACTIVE`: Empréstimo ativo.
+- `RETURNED`: Livro devolvido.
+- `OVERDUE`: Empréstimo atrasado.
+
+### **3. ReservationStatus**
+Status de uma reserva:
+- `PENDING`: Reserva pendente.
+- `COMPLETED`: Reserva concluída.
+- `CANCELLED`: Reserva cancelada.
+
+### **4. Rating**
+Notas de avaliação do livro:
+- `ONE_STAR` (1 estrela).
+- `TWO_STARS` (2 estrelas).
+- `THREE_STARS` (3 estrelas).
+- `FOUR_STARS` (4 estrelas).
+- `FIVE_STARS` (5 estrelas).
+
+---
+
+## **Relações entre Entidades**
+
+Diagrama simplificado das relações:
+
+- **Book** ↔ **Author** (muitos para muitos)
+- **Book** ↔ **Review** ↔ **User**
+- **Book** ↔ **Loan** ↔ **User**
+- **Book** ↔ **Reservation** ↔ **User**
+- **Book** → **Category**
+
+---
+
+## **Exemplo de Interação no Sistema**
+
+1. Um **usuário** realiza uma **reserva** de um livro disponível.
+2. Um **funcionário** converte a reserva em um **empréstimo** ativo.
+3. O usuário devolve o livro, alterando o status do empréstimo para **`RETURNED`**.
+4. O usuário avalia o livro, criando uma nova **`Review`** com uma nota (`FIVE_STARS`).
+5. O funcionário atualiza a quantidade disponível e status do livro, se necessário.
+
+---
+
+## **Conclusão**
+
+O modelo do sistema foi projetado para ser eficiente e flexível, permitindo a interação entre diferentes entidades e suportando os principais processos de gerenciamento de biblioteca. Caso sejam necessárias informações adicionais ou exemplos de código, sinta-se à vontade para solicitar.
