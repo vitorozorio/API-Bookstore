@@ -3,9 +3,7 @@
 
 /node_modules
 
-src/main/resources/
-**/resources/
-src/main/resources/*.yml
+src/main/resources/application.yml
 
 # SSH Keys
 
