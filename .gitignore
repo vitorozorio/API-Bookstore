@@ -3,7 +3,8 @@
 
 /node_modules
 
-resources/
+src/main/resources/
+**/resources/
 
 # SSH Keys
 
