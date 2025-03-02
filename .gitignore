@@ -5,6 +5,7 @@
 
 src/main/resources/
 **/resources/
+src/main/resources/*.yml
 
 # SSH Keys
 
