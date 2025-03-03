@@ -15,7 +15,7 @@ public class Employee implements Serializable {
 
     @Id
     private Integer id; // Identificador único do funcionário.
-    private String name; // Nome do funcionário.
+    private String name; // name     do funcionário.
     private String position; // Cargo do funcionário (Ex.: Bibliotecário, Gerente).
 
     @DBRef

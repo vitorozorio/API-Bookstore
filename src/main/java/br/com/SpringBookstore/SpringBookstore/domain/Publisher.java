@@ -14,12 +14,12 @@ public class Publisher implements Serializable {
     @Id
     private Integer id;
 
-    private String nome;
+    private String name;
     private String endereco;
 
-    public Publisher(Integer id, String nome, String endereco) {
+    public Publisher(Integer id, String name, String endereco) {
         this.id = id;
-        this.nome = nome;
+        this.name = name;
         this.endereco = endereco;
     }
 
@@ -31,12 +31,12 @@ public class Publisher implements Serializable {
         this.id = id;
     }
 
-    public String getNome() {
-        return nome;
+    public String getname() {
+        return name;
     }
 
-    public void setNome(String nome) {
-        this.nome = nome;
+    public void setname(String name) {
+        this.name = name;
     }
 
     public String getEndereco() {

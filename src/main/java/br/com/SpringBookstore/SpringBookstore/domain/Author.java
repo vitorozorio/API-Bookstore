@@ -17,7 +17,7 @@ public class Author implements Serializable {
     @Id
     private Integer id;
 
-    private String nome;
+    private String name;
     private String nacionalidade;
     private Date dataNascimento;
     private String biografia;
@@ -25,10 +25,10 @@ public class Author implements Serializable {
     @DBRef
     private List<Book> books; // Relacionamento com livros
 
-    public Author(Integer id, String nome, String nacionalidade, Date dataNascimento,
+    public Author(Integer id, String name, String nacionalidade, Date dataNascimento,
                   String biografia, List<Book> books) {
         this.id = id;
-        this.nome = nome;
+        this.name = name;
         this.nacionalidade = nacionalidade;
         this.dataNascimento = dataNascimento;
         this.biografia = biografia;
@@ -43,12 +43,12 @@ public class Author implements Serializable {
         this.id = id;
     }
 
-    public String getNome() {
-        return nome;
+    public String getname() {
+        return name;
     }
 
-    public void setNome(String nome) {
-        this.nome = nome;
+    public void setname(String name) {
+        this.name = name;
     }
 
     public String getNacionalidade() {

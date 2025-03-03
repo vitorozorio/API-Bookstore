@@ -16,16 +16,16 @@ public class Category implements Serializable {
     @Id
     private Integer id;
 
-    private String nome; // Nome da categoria, ex: Ficção, Fantasia, Drama
+    private String name; // name da categoria, ex: Ficção, Fantasia, Drama
 
     private String descricao; // Breve descrição ou detalhes adicionais da categoria
 
     @DBRef
     private List<Book> books; // Relacionamento muitos-para-muitos com Livros
 
-    public Category(Integer id, String nome, String descricao, List<Book> books) {
+    public Category(Integer id, String name, String descricao, List<Book> books) {
         this.id = id;
-        this.nome = nome;
+        this.name = name;
         this.descricao = descricao;
         this.books = books;
     }
@@ -38,12 +38,12 @@ public class Category implements Serializable {
         this.id = id;
     }
 
-    public String getNome() {
-        return nome;
+    public String getname() {
+        return name;
     }
 
-    public void setNome(String nome) {
-        this.nome = nome;
+    public void setname(String name) {
+        this.name = name;
     }
 
     public String getDescricao() {

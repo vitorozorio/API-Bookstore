@@ -16,7 +16,7 @@ public class User implements Serializable {
 
     @Id
     private Integer id; // Identificador único do usuário.
-    private String name; // Nome do usuário.
+    private String name; // name do usuário.
     private String email; // Email do usuário.
     private String phone; // Telefone do usuário.
     private String address; // Endereço do usuário.
