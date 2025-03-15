@@ -24,7 +24,7 @@ public class AuthorController {
 
     // Buscar um autor pelo ID
     @GetMapping("/{id}")
-    public ResponseEntity<Author> findById(@PathVariable Integer id) {
+    public ResponseEntity<Author> findById(@PathVariable String id) {
         Author author = authorService.findById(id);
         return ResponseEntity.ok(author);
     }
@@ -38,14 +38,14 @@ public class AuthorController {
 
     // Atualizar um autor existente
     @PutMapping("/{id}")
-    public ResponseEntity<Author> update(@PathVariable Integer id, @RequestBody Author updatedAuthor) {
+    public ResponseEntity<Author> update(@PathVariable String id, @RequestBody Author updatedAuthor) {
         Author updated = authorService.update(id, updatedAuthor);
         return ResponseEntity.ok(updated);
     }
 
     // Deletar um autor pelo ID
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Integer id) {
+    public ResponseEntity<Void> delete(@PathVariable String id) {
         authorService.delete(id);
         return ResponseEntity.noContent().build();
     }

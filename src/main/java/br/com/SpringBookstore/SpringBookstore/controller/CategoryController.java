@@ -3,6 +3,7 @@ package br.com.SpringBookstore.SpringBookstore.controller;
 import br.com.SpringBookstore.SpringBookstore.domain.Category;
 import br.com.SpringBookstore.SpringBookstore.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,37 +16,28 @@ public class CategoryController {
     @Autowired
     private CategoryService categoryService;
 
-    // Buscar todas as categorias
     @GetMapping
     public ResponseEntity<List<Category>> findAll() {
-        List<Category> categories = categoryService.findAll();
-        return ResponseEntity.ok(categories);
+        return ResponseEntity.ok(categoryService.findAll());
     }
 
-    // Buscar uma categoria pelo ID
     @GetMapping("/{id}")
-    public ResponseEntity<Category> findById(@PathVariable Integer id) {
-        Category category = categoryService.findById(id);
-        return ResponseEntity.ok(category);
+    public ResponseEntity<Category> findById(@PathVariable String id) {
+        return ResponseEntity.ok(categoryService.findById(id));
     }
 
-    // Criar uma nova categoria
     @PostMapping
     public ResponseEntity<Category> insert(@RequestBody Category category) {
-        Category newCategory = categoryService.insert(category);
-        return ResponseEntity.status(201).body(newCategory);
+        return ResponseEntity.status(HttpStatus.CREATED).body(categoryService.insert(category));
     }
 
-    // Atualizar uma categoria existente
     @PutMapping("/{id}")
-    public ResponseEntity<Category> update(@PathVariable Integer id, @RequestBody Category updatedCategory) {
-        Category updated = categoryService.update(id, updatedCategory);
-        return ResponseEntity.ok(updated);
+    public ResponseEntity<Category> update(@PathVariable String id, @RequestBody Category updatedCategory) {
+        return ResponseEntity.ok(categoryService.update(id, updatedCategory));
     }
 
-    // Deletar uma categoria pelo ID
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Integer id) {
+    public ResponseEntity<Void> delete(@PathVariable String id) {
         categoryService.delete(id);
         return ResponseEntity.noContent().build();
     }

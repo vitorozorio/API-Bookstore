@@ -24,7 +24,7 @@ public class BookController {
 
     // Buscar um livro pelo ID
     @GetMapping("/{id}")
-    public ResponseEntity<Book> findById(@PathVariable Integer id) {
+    public ResponseEntity<Book> findById(@PathVariable String id) {
         Book book = bookService.findById(id); // Pode lançar BusinessLogicException (400 Bad Request)
         return ResponseEntity.ok(book);
     }
@@ -38,14 +38,14 @@ public class BookController {
 
     // Atualizar um livro existente
     @PutMapping("/{id}")
-    public ResponseEntity<Book> update(@PathVariable Integer id, @RequestBody Book updatedBook) {
+    public ResponseEntity<Book> update(@PathVariable String id, @RequestBody Book updatedBook) {
         Book updated = bookService.update(id, updatedBook); // Pode lançar BusinessLogicException ou ConflictException
         return ResponseEntity.ok(updated);
     }
 
     // Deletar um livro pelo ID
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Integer id) {
+    public ResponseEntity<Void> delete(@PathVariable String id) {
         bookService.delete(id); // Pode lançar BusinessLogicException (400 Bad Request)
         return ResponseEntity.noContent().build(); // Retorna 204 No Content
     }

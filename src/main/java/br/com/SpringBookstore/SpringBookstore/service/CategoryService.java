@@ -22,7 +22,7 @@ public class CategoryService {
     }
 
     // Buscar uma categoria pelo ID
-    public Category findById(Integer id) {
+    public Category findById(String id) { // Alterado de Integer para String
         Optional<Category> obj = repository.findById(id);
         if (obj.isEmpty()) {
             throw new BusinessLogicException("Categoria não encontrada com o ID: " + id);
@@ -33,35 +33,30 @@ public class CategoryService {
     // Criar uma nova categoria
     public Category insert(Category category) {
         // Validar se o nome da categoria já existe
-        if (repository.findByName(category.getname()) != null) {
-            throw new ConflictException("Categoria já cadastrada: " + category.getname());
+        if (repository.findByName(category.getName()) != null) {
+            throw new ConflictException("Categoria já cadastrada: " + category.getName());
         }
         return repository.save(category);
     }
 
     // Atualizar uma categoria existente
-    public Category update(Integer id, Category updatedCategory) {
+    public Category update(String id, Category updatedCategory) { // Alterado de Integer para String
         Category entity = findById(id);
 
         // Validar se o novo nome está sendo alterado para um nome já existente
-        if (!entity.getname().equals(updatedCategory.getname()) && repository.findByName(updatedCategory.getname()) != null) {
-            throw new ConflictException("Categoria já cadastrada: " + updatedCategory.getname());
+        if (!entity.getName().equals(updatedCategory.getName()) && repository.findByName(updatedCategory.getName()) != null) {
+            throw new ConflictException("Categoria já cadastrada: " + updatedCategory.getName());
         }
 
-        updateData(entity, updatedCategory);
+        // Atualizar os dados
+        entity.setName(updatedCategory.getName());
+        entity.setDescricao(updatedCategory.getDescricao());
         return repository.save(entity);
     }
 
     // Deletar uma categoria pelo ID
-    public void delete(Integer id) {
+    public void delete(String id) { // Alterado de Integer para String
         Category category = findById(id); // Verifica se existe antes de deletar
         repository.deleteById(id);
-    }
-
-    // Método auxiliar para atualizar os dados da categoria
-    private void updateData(Category entity, Category updatedCategory) {
-        entity.setname(updatedCategory.getname());
-        entity.setDescricao(updatedCategory.getDescricao());
-        entity.setBooks(updatedCategory.getBooks());
     }
 }

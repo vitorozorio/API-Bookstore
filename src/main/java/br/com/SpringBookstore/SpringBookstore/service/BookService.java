@@ -22,7 +22,7 @@ public class BookService {
     }
 
     // Buscar um livro pelo ID
-    public Book findById(Integer id) {
+    public Book findById(String id) {
         Optional<Book> obj = repository.findById(id);
         if (obj.isEmpty()) {
             throw new BusinessLogicException("Livro não encontrado com o ID: " + id);
@@ -46,7 +46,7 @@ public class BookService {
     }
 
     // Deletar um livro pelo ID
-    public void delete(Integer id) {
+    public void delete(String id) {
         // Validar se o livro existe
         if (!repository.existsById(id)) {
             throw new BusinessLogicException("Livro não encontrado com o ID: " + id);
@@ -55,7 +55,7 @@ public class BookService {
     }
 
     // Atualizar um livro existente
-    public Book update(Integer id, Book updatedBook) {
+    public Book update(String id, Book updatedBook) {
         Book entity = findById(id); // Verifica se o livro existe
 
         // Validar se o título está sendo alterado para um título já existente

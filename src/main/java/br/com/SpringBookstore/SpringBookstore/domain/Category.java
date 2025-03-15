@@ -1,48 +1,47 @@
 package br.com.SpringBookstore.SpringBookstore.domain;
 
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.util.List;
 
-@Document(collection = "Category")
+@Document(collection = "categories") // Nome da coleção no MongoDB
 public class Category implements Serializable {
+
     @Serial
     private static final long serialVersionUID = 1L;
 
     @Id
-    private Integer id;
+    private String id; // Alterado de Integer para String
 
-    private String name; // name da categoria, ex: Ficção, Fantasia, Drama
+    private String name; // Nome da categoria, ex: Ficção, Fantasia, Drama
 
     private String descricao; // Breve descrição ou detalhes adicionais da categoria
 
-    @DBRef
-    private List<Book> books; // Relacionamento muitos-para-muitos com Livros
+    // Construtor vazio (necessário para frameworks como Spring Data)
+    public Category() {}
 
-    public Category(Integer id, String name, String descricao, List<Book> books) {
-        this.id = id;
+    // Construtor com parâmetros (removido o id, pois será gerado automaticamente pelo MongoDB)
+    public Category(String name, String descricao) {
         this.name = name;
         this.descricao = descricao;
-        this.books = books;
     }
 
-    public Integer getId() {
+    // Getters e Setters
+    public String getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(String id) {
         this.id = id;
     }
 
-    public String getname() {
+    public String getName() {
         return name;
     }
 
-    public void setname(String name) {
+    public void setName(String name) {
         this.name = name;
     }
 
@@ -52,13 +51,5 @@ public class Category implements Serializable {
 
     public void setDescricao(String descricao) {
         this.descricao = descricao;
-    }
-
-    public List<Book> getBooks() {
-        return books;
-    }
-
-    public void setBooks(List<Book> books) {
-        this.books = books;
     }
 }

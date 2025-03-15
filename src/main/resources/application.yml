@@ -1,7 +1,21 @@
-
 spring:
   application:
-    name: Spring_Bookstore
+    name: Spring_Bookstore # Nome da aplicação
+
   data:
     mongodb:
-      uri: mongodb://localhost:27017/SpringBookstore
+      uri: mongodb://localhost:27017/SpringBookstore # URI de conexão com o MongoDB
+
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher # Estratégia de matching para compatibilidade com Swagger/Springdoc
+
+# Configuração opcional do Springdoc OpenAPI (Swagger)
+springdoc:
+  api-docs:
+    enabled: true # Habilita os endpoints de documentação da API
+    path: /v3/api-docs # Define o caminho para os dados JSON da API
+  swagger-ui:
+    path: /swagger-ui.html # Define o caminho para a interface do Swagger UI
+    tags-sorter: alpha # Ordena as tags alfabeticamente
+    operations-sorter: alpha # Ordena as operações alfabeticamente

@@ -23,7 +23,7 @@ public class AuthorService {
     }
 
     // Buscar um autor pelo ID
-    public Author findById(Integer id) {
+    public Author findById(String id) {
         Optional<Author> obj = repository.findById(id);
         if (obj.isEmpty()) {
             throw new BusinessLogicException("Autor não encontrado com o ID: " + id);
@@ -41,7 +41,7 @@ public class AuthorService {
     }
 
     // Atualizar um autor existente
-    public Author update(Integer id, Author updatedAuthor) {
+    public Author update(String id, Author updatedAuthor) {
         Author entity = findById(id);
 
         // Validar se o novo nome está sendo alterado para um nome já existente
@@ -54,7 +54,7 @@ public class AuthorService {
     }
 
     // Deletar um autor pelo ID
-    public void delete(Integer id) {
+    public void delete(String id) {
         Author author = findById(id); // Verifica se existe antes de deletar
         repository.deleteById(id);
     }
