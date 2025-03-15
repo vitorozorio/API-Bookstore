@@ -1,0 +1,7 @@
+
+spring:
+  application:
+    name: Spring_Bookstore
+  data:
+    mongodb:
+      uri: mongodb://localhost:27017/SpringBookstore

@@ -26,4 +26,16 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
+    /**
+     * Captura exceções genéricas e retorna 400 Bad Request.
+     */
+    @ExceptionHandler(InvalidInputException.class)
+    public final ResponseEntity<ErrorResponse> handleBadRequestExceptions(Exception ex, WebRequest request) {
+        ErrorResponse response = new ErrorResponse(
+                new Date(),
+                ex.getMessage(),
+                request.getDescription(false));
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+
 }
