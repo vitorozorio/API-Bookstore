@@ -5,7 +5,7 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface AuthorRepository extends MongoRepository<Author, String> {
+public interface AuthorRepository extends MongoRepository<Author, Integer> {
     // Queries personalizadas podem ser adicionadas aqui
     Author findByName(String name); // Exemplo de busca por nome
 }
