@@ -1,28 +1,34 @@
 package br.com.SpringBookstore.SpringBookstore.domain;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.io.Serial;
 import java.io.Serializable;
 
-@Document(collection = "categories") // Nome da coleção no MongoDB
+@Document(collection = "categories")
 public class Category implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 1L;
 
     @Id
-    private String id; // Alterado de Integer para String
+    private String id; // Identificador único da categoria.
 
-    private String name; // Nome da categoria, ex: Ficção, Fantasia, Drama
+    @NotBlank(message = "O nome da categoria é obrigatório.")
+    @Size(max = 100, message = "O nome da categoria deve ter no máximo 100 caracteres.")
+    private String name; // Nome da categoria (ex.: Ficção, Fantasia, Drama).
 
-    private String descricao; // Breve descrição ou detalhes adicionais da categoria
+    @Size(max = 500, message = "A descrição da categoria deve ter no máximo 500 caracteres.")
+    private String descricao; // Breve descrição ou detalhes adicionais da categoria.
 
     // Construtor vazio (necessário para frameworks como Spring Data)
-    public Category() {}
+    public Category() {
+    }
 
-    // Construtor com parâmetros (removido o id, pois será gerado automaticamente pelo MongoDB)
+    // Construtor com parâmetros (sem o id, pois será gerado automaticamente pelo MongoDB)
     public Category(String name, String descricao) {
         this.name = name;
         this.descricao = descricao;

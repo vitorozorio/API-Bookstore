@@ -15,7 +15,8 @@ public class User implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
-    private Integer id; // Identificador único do usuário.
+    private String id; // Identificador único do usuário.
+
     private String name; // name do usuário.
     private String email; // Email do usuário.
     private String phone; // Telefone do usuário.
@@ -31,7 +32,7 @@ public class User implements Serializable {
     public User() {
     }
 
-    public User(Integer id, String name, String email, String phone, String address) {
+    public User(String id, String name, String email, String phone, String address) {
         this.id = id;
         this.name = name;
         this.email = email;
@@ -40,11 +41,11 @@ public class User implements Serializable {
     }
 
     // Getters e Setters
-    public Integer getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(String id) {
         this.id = id;
     }
 

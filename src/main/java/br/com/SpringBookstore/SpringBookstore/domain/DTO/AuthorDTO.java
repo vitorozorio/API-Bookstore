@@ -1,50 +1,34 @@
-package br.com.SpringBookstore.SpringBookstore.domain;
+package br.com.SpringBookstore.SpringBookstore.domain.DTO;
 
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.DBRef;
-import org.springframework.data.mongodb.core.mapping.Document;
-
-import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.List;
 
-@Document(collection = "Author")
-public class Author implements Serializable {
+public class AuthorDTO implements Serializable {
 
-    @Serial
     private static final long serialVersionUID = 1L;
 
-    @Id
     private String id; // Identificador único do autor.
-
-    @NotBlank(message = "O nome do autor é obrigatório.")
     private String name; // Nome do autor.
-
-    @NotBlank(message = "A nacionalidade do autor é obrigatória.")
     private String nacionalidade; // Nacionalidade do autor.
-
-    @NotNull(message = "A data de nascimento do autor é obrigatória.")
     private LocalDate dataNascimento; // Data de nascimento do autor.
-
     private String biografia; // Breve biografia do autor.
 
-    @DBRef
-    private List<Book> books; // Livros escritos pelo autor.
+    private List<String> bookIds; // IDs dos livros escritos pelo autor.
 
-    // Construtor vazio (necessário para frameworks como Spring Data)
-    public Author() {
+    // Construtor padrão
+    public AuthorDTO() {
     }
 
-    // Construtor com parâmetros (sem o id, pois será gerado automaticamente)
-    public Author(String name, String nacionalidade, LocalDate dataNascimento, String biografia, List<Book> books) {
+    // Construtor que recebe uma entidade Author
+    public AuthorDTO(String id, String name, String nacionalidade, LocalDate dataNascimento,
+                     String biografia, List<String> bookIds) {
+        this.id = id;
         this.name = name;
         this.nacionalidade = nacionalidade;
         this.dataNascimento = dataNascimento;
         this.biografia = biografia;
-        this.books = books;
+        this.bookIds = bookIds;
     }
 
     // Getters e Setters
@@ -88,11 +72,11 @@ public class Author implements Serializable {
         this.biografia = biografia;
     }
 
-    public List<Book> getBooks() {
-        return books;
+    public List<String> getBookIds() {
+        return bookIds;
     }
 
-    public void setBooks(List<Book> books) {
-        this.books = books;
+    public void setBookIds(List<String> bookIds) {
+        this.bookIds = bookIds;
     }
 }

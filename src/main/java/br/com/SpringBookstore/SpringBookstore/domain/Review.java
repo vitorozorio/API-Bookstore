@@ -1,8 +1,11 @@
 package br.com.SpringBookstore.SpringBookstore.domain;
 
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.Size;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.DBRef;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -14,9 +17,14 @@ public class Review implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
-    private Integer id; // Identificador único da avaliação.
-    private String comment; // Comentário deixado pelo usuário.
-    private Integer rating; // Nota dada ao livro (de 1 a 5, por exemplo).
+    private String id; // Identificador único da avaliação.
+
+    @Size(max = 1000, message = "O comentário deve ter no máximo 1000 caracteres.")
+    private String comment; // Comentário deixado pelo usuário (opcional).
+
+    @Min(value = 1, message = "A nota deve ser no mínimo 1.")
+    @Max(value = 5, message = "A nota deve ser no máximo 5.")
+    private Integer rating; // Nota dada ao livro (de 1 a 5).
 
     @DBRef
     private User user; // Usuário que fez a avaliação.
@@ -24,12 +32,12 @@ public class Review implements Serializable {
     @DBRef
     private Book book; // Livro avaliado.
 
-    // Construtores
+    // Construtor vazio (necessário para frameworks como Spring Data)
     public Review() {
     }
 
-    public Review(Integer id, String comment, Integer rating, User user, Book book) {
-        this.id = id;
+    // Construtor com parâmetros (sem o id, pois será gerado automaticamente)
+    public Review(String comment, Integer rating, User user, Book book) {
         this.comment = comment;
         this.rating = rating;
         this.user = user;
@@ -37,11 +45,11 @@ public class Review implements Serializable {
     }
 
     // Getters e Setters
-    public Integer getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -75,5 +83,15 @@ public class Review implements Serializable {
 
     public void setBook(Book book) {
         this.book = book;
+    }
+
+    // Método para verificar se a avaliação é positiva (nota >= 4)
+    public boolean isPositive() {
+        return rating != null && rating >= 4;
+    }
+
+    // Método para verificar se a avaliação é negativa (nota <= 2)
+    public boolean isNegative() {
+        return rating != null && rating <= 2;
     }
 }

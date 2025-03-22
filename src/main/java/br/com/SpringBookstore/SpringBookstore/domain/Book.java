@@ -1,9 +1,12 @@
 package br.com.SpringBookstore.SpringBookstore.domain;
 
 import br.com.SpringBookstore.SpringBookstore.domain.enuns.BookStatus;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.DBRef;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -16,13 +19,27 @@ public class Book implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
-    private Integer id; // Identificador único do livro.
+    private String id; // Identificador único do livro.
+
+    @NotBlank(message = "O título do livro é obrigatório.")
     private String title; // Título do livro.
+
+    @NotBlank(message = "O ISBN do livro é obrigatório.")
     private String isbn; // Código ISBN.
+
+    @NotNull(message = "O ano de publicação é obrigatório.")
+    @Min(value = 0, message = "O ano de publicação deve ser maior ou igual a zero.")
     private Integer publicationYear; // Ano de publicação.
+
+    @NotBlank(message = "A editora do livro é obrigatória.")
     private String publisher; // Editora.
+
+    @NotNull(message = "A quantidade disponível é obrigatória.")
+    @Min(value = 0, message = "A quantidade disponível deve ser maior ou igual a zero.")
     private Integer availableQuantity; // Quantidade disponível.
-    private BookStatus status; // Enum que define o status atual do livro.
+
+    @NotNull(message = "O status do livro é obrigatório.")
+    private BookStatus status; // Status atual do livro.
 
     @DBRef
     private Category category; // Categoria do livro.
@@ -33,12 +50,13 @@ public class Book implements Serializable {
     @DBRef
     private List<Review> reviews; // Lista de avaliações/feedback feitas por usuários.
 
-    // Construtores
+    // Construtor vazio (necessário para frameworks como Spring Data)
     public Book() {
     }
 
-    public Book(Integer id, String title, String isbn, Integer publicationYear, String publisher, Integer availableQuantity, BookStatus status, Category category, List<Author> authors, List<Review> reviews) {
-        this.id = id;
+    // Construtor com parâmetros (sem o id, pois será gerado automaticamente)
+    public Book(String title, String isbn, Integer publicationYear, String publisher,
+                Integer availableQuantity, BookStatus status, Category category, List<Author> authors, List<Review> reviews) {
         this.title = title;
         this.isbn = isbn;
         this.publicationYear = publicationYear;
@@ -51,11 +69,11 @@ public class Book implements Serializable {
     }
 
     // Getters e Setters
-    public Integer getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(String id) {
         this.id = id;
     }
 
