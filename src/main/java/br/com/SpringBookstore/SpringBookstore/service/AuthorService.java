@@ -1,15 +1,15 @@
 package br.com.SpringBookstore.SpringBookstore.service;
 
 import br.com.SpringBookstore.SpringBookstore.domain.Author;
+import br.com.SpringBookstore.SpringBookstore.domain.DTO.AuthorDTO;
 import br.com.SpringBookstore.SpringBookstore.exception.BusinessLogicException;
 import br.com.SpringBookstore.SpringBookstore.exception.ConflictException;
 import br.com.SpringBookstore.SpringBookstore.repository.AuthorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
 import java.util.List;
-import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class AuthorService {
@@ -17,54 +17,115 @@ public class AuthorService {
     @Autowired
     private AuthorRepository repository;
 
-    // Buscar todos os autores
-    public List<Author> findAll() {
-        return repository.findAll();
+    // Buscar todos os autores e retornar como DTO
+    public List<AuthorDTO> findAll() {
+        return repository.findAll().stream()
+                .map(author -> new AuthorDTO(
+                        author.getId(),
+                        author.getName(),
+                        author.getNacionalidade(),
+                        author.getDataNascimento(),
+                        author.getBiografia(),
+                        author.getBooks().stream().map(book -> book.getId()).toList()
+                ))
+                .collect(Collectors.toList());
     }
 
-    // Buscar um autor pelo ID
-    public Author findById(String id) {
-        Optional<Author> obj = repository.findById(id);
-        if (obj.isEmpty()) {
-            throw new BusinessLogicException("Autor não encontrado com o ID: " + id);
-        }
-        return obj.get();
+    // Buscar um autor pelo ID e retornar como DTO
+    public AuthorDTO findById(String id) {
+        Author author = repository.findById(id)
+                .orElseThrow(() -> new BusinessLogicException("Autor não encontrado com o ID: " + id));
+        return new AuthorDTO(
+                author.getId(),
+                author.getName(),
+                author.getNacionalidade(),
+                author.getDataNascimento(),
+                author.getBiografia(),
+                author.getBooks().stream().map(book -> book.getId()).toList()
+        );
     }
 
-    // Criar um novo autor
-    public Author insert(Author author) {
+    // Criar um novo autor a partir de dados fornecidos
+    public AuthorDTO insert(AuthorDTO dto) {
         // Validar se o nome do autor já existe
-        if (repository.findByName(author.getname()) != null) {
-            throw new ConflictException("Autor já cadastrado: " + author.getname());
+        if (repository.findByName(dto.getName()) != null) {
+            throw new ConflictException("Autor já cadastrado: " + dto.getName());
         }
-        return repository.save(author);
+
+        // Validar campos obrigatórios
+        if (dto.getName() == null || dto.getName().trim().isEmpty()) {
+            throw new BusinessLogicException("O nome do autor é obrigatório.");
+        }
+        if (dto.getDataNascimento() == null) {
+            throw new BusinessLogicException("A data de nascimento do autor é obrigatória.");
+        }
+
+        // Criar a entidade a partir do DTO
+        Author author = new Author(
+                dto.getName(),
+                dto.getNacionalidade(),
+                dto.getDataNascimento(),
+                dto.getBiografia(),
+                null // Livros podem ser adicionados posteriormente
+        );
+
+        // Salvar o autor no banco de dados
+        Author savedAuthor = repository.save(author);
+
+        // Retornar o autor como DTO
+        return new AuthorDTO(
+                savedAuthor.getId(),
+                savedAuthor.getName(),
+                savedAuthor.getNacionalidade(),
+                savedAuthor.getDataNascimento(),
+                savedAuthor.getBiografia(),
+                savedAuthor.getBooks().stream().map(book -> book.getId()).toList()
+        );
     }
 
-    // Atualizar um autor existente
-    public Author update(String id, Author updatedAuthor) {
-        Author entity = findById(id);
+    // Atualizar um autor existente a partir de dados fornecidos
+    public AuthorDTO update(String id, AuthorDTO dto) {
+        // Buscar o autor pelo ID
+        Author entity = repository.findById(id)
+                .orElseThrow(() -> new BusinessLogicException("Autor não encontrado com o ID: " + id));
 
         // Validar se o novo nome está sendo alterado para um nome já existente
-        if (!entity.getname().equals(updatedAuthor.getname()) && repository.findByName(updatedAuthor.getname()) != null) {
-            throw new ConflictException("Autor já cadastrado: " + updatedAuthor.getname());
+        if (!entity.getName().equalsIgnoreCase(dto.getName()) && repository.findByName(dto.getName()) != null) {
+            throw new ConflictException("Autor já cadastrado: " + dto.getName());
         }
 
-        updateData(entity, updatedAuthor);
-        return repository.save(entity);
+        // Validar campos obrigatórios
+        if (dto.getName() == null || dto.getName().trim().isEmpty()) {
+            throw new BusinessLogicException("O nome do autor é obrigatório.");
+        }
+        if (dto.getDataNascimento() == null) {
+            throw new BusinessLogicException("A data de nascimento do autor é obrigatória.");
+        }
+
+        // Atualizar os campos da entidade
+        entity.setName(dto.getName());
+        entity.setNacionalidade(dto.getNacionalidade());
+        entity.setDataNascimento(dto.getDataNascimento());
+        entity.setBiografia(dto.getBiografia());
+
+        // Salvar as alterações no banco de dados
+        Author updatedAuthor = repository.save(entity);
+
+        // Retornar o autor como DTO
+        return new AuthorDTO(
+                updatedAuthor.getId(),
+                updatedAuthor.getName(),
+                updatedAuthor.getNacionalidade(),
+                updatedAuthor.getDataNascimento(),
+                updatedAuthor.getBiografia(),
+                updatedAuthor.getBooks().stream().map(book -> book.getId()).toList()
+        );
     }
 
     // Deletar um autor pelo ID
     public void delete(String id) {
-        Author author = findById(id); // Verifica se existe antes de deletar
+        repository.findById(id)
+                .orElseThrow(() -> new BusinessLogicException("Autor não encontrado com o ID: " + id));
         repository.deleteById(id);
-    }
-
-    // Método auxiliar para atualizar os dados do autor
-    private void updateData(Author entity, Author updatedAuthor) {
-        entity.setname(updatedAuthor.getname());
-        entity.setNacionalidade(updatedAuthor.getNacionalidade());
-        entity.setDataNascimento(updatedAuthor.getDataNascimento());
-        entity.setBiografia(updatedAuthor.getBiografia());
-        entity.setBooks(updatedAuthor.getBooks());
     }
 }
