@@ -1,6 +1,7 @@
 package br.com.SpringBookstore.SpringBookstore.service;
 
 import br.com.SpringBookstore.SpringBookstore.domain.Category;
+import br.com.SpringBookstore.SpringBookstore.domain.DTO.CategoryDTO;
 import br.com.SpringBookstore.SpringBookstore.exception.BusinessLogicException;
 import br.com.SpringBookstore.SpringBookstore.exception.ConflictException;
 import br.com.SpringBookstore.SpringBookstore.repository.CategoryRepository;
@@ -8,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class CategoryService {
@@ -16,47 +17,98 @@ public class CategoryService {
     @Autowired
     private CategoryRepository repository;
 
-    // Buscar todas as categorias
-    public List<Category> findAll() {
-        return repository.findAll();
+    // Buscar todos as Categoriaes e retornar como DTO
+    public List<CategoryDTO> findAll() {
+        return repository.findAll().stream()
+                .map(Category -> new CategoryDTO(
+                        Category.getId(),
+                        Category.getName(),
+                        Category.getDescricao()
+                ))
+                .collect(Collectors.toList());
     }
 
-    // Buscar uma categoria pelo ID
-    public Category findById(String id) { // Alterado de Integer para String
-        Optional<Category> obj = repository.findById(id);
-        if (obj.isEmpty()) {
-            throw new BusinessLogicException("Categoria não encontrada com o ID: " + id);
+    // Buscar uma Categoria pelo ID e retornar como DTO
+    public CategoryDTO findById(String id) {
+        Category Category = repository.findById(id)
+                .orElseThrow(() -> new BusinessLogicException("Categoria não encontrada com o ID: " + id));
+        return new CategoryDTO(
+                Category.getId(),
+                Category.getName(),
+                Category.getDescricao()
+        );
+    }
+
+    // Criar uma nova Categoria a partir de dados fornecidos
+    public CategoryDTO insert(CategoryDTO dto) {
+        // Validar se o nome do Categoria já existe
+        if (repository.findByName(dto.getName()) != null) {
+            throw new ConflictException("Categoria já cadastrada: " + dto.getName());
         }
-        return obj.get();
-    }
 
-    // Criar uma nova categoria
-    public Category insert(Category category) {
-        // Validar se o nome da categoria já existe
-        if (repository.findByName(category.getName()) != null) {
-            throw new ConflictException("Categoria já cadastrada: " + category.getName());
+        // Validar campos obrigatórias
+        if (dto.getName() == null || dto.getName().trim().isEmpty()) {
+            throw new BusinessLogicException("O nome do Categoria é obrigatória.");
         }
-        return repository.save(category);
+        if (dto.getDescricao() == null) {
+            throw new BusinessLogicException("A Descrição é obrigatória.");
+        }
+
+        // Criar a entidade a partir do DTO
+        Category Category = new Category(
+                dto.getName(),
+                dto.getDescricao()
+        );
+
+        // Salvar a Categoria no banco de dados
+        Category savedCategory = repository.save(Category);
+
+        // Retornar a Categoria como DTO
+        return new CategoryDTO(
+                savedCategory.getId(),
+                savedCategory.getName(),
+                savedCategory.getDescricao()
+        );
     }
 
-    // Atualizar uma categoria existente
-    public Category update(String id, Category updatedCategory) { // Alterado de Integer para String
-        Category entity = findById(id);
+    // Atualizar uma Categoria existente a partir de dados fornecidos
+    public CategoryDTO update(String id, CategoryDTO dto) {
+        // Buscar o Categoria pelo ID
+        Category entity = repository.findById(id)
+                .orElseThrow(() -> new BusinessLogicException("Categoria não encontrada com o ID: " + id));
 
         // Validar se o novo nome está sendo alterado para um nome já existente
-        if (!entity.getName().equals(updatedCategory.getName()) && repository.findByName(updatedCategory.getName()) != null) {
-            throw new ConflictException("Categoria já cadastrada: " + updatedCategory.getName());
+        if (!entity.getName().equalsIgnoreCase(dto.getName()) && repository.findByName(dto.getName()) != null) {
+            throw new ConflictException("Categoria já cadastrada: " + dto.getName());
         }
 
-        // Atualizar os dados
-        entity.setName(updatedCategory.getName());
-        entity.setDescricao(updatedCategory.getDescricao());
-        return repository.save(entity);
+        // Validar campos obrigatórios
+        if (dto.getName() == null || dto.getName().trim().isEmpty()) {
+            throw new BusinessLogicException("O nome do Categoria é obrigatória.");
+        }
+        if (dto.getDescricao() == null) {
+            throw new BusinessLogicException("A data de nascimento do Categoria é obrigatória.");
+        }
+
+        // Atualizar os campos da entidade
+        entity.setName(dto.getName());
+        entity.setDescricao(dto.getDescricao());
+        
+        // Salvar as alterações no banco de dados
+        Category updatedCategory = repository.save(entity);
+
+        // Retornar a Categoria como DTO
+        return new CategoryDTO(
+                updatedCategory.getId(),
+                updatedCategory.getName(),
+                updatedCategory.getDescricao()
+        );
     }
 
-    // Deletar uma categoria pelo ID
-    public void delete(String id) { // Alterado de Integer para String
-        Category category = findById(id); // Verifica se existe antes de deletar
+    // Deletar uma Categoria pelo ID
+    public void delete(String id) {
+        repository.findById(id)
+                .orElseThrow(() -> new BusinessLogicException("Categoria não encontrada com o ID: " + id));
         repository.deleteById(id);
     }
 }

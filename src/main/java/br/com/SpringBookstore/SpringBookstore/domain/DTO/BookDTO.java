@@ -15,8 +15,8 @@ public class BookDTO implements Serializable {
     private String publisher; // Editora.
     private Integer availableQuantity; // Quantidade disponível.
     private BookStatus status; // Status atual do livro.
-
     private String categoryId; // ID da categoria do livro.
+
     private List<String> authorIds; // IDs dos autores do livro.
     private List<String> reviewIds; // IDs das avaliações do livro.
 
