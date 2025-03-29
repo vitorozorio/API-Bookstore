@@ -1,10 +1,12 @@
 package br.com.SpringBookstore.SpringBookstore.service;
 
 import br.com.SpringBookstore.SpringBookstore.domain.Author;
+import br.com.SpringBookstore.SpringBookstore.domain.Book;
 import br.com.SpringBookstore.SpringBookstore.domain.DTO.AuthorDTO;
 import br.com.SpringBookstore.SpringBookstore.exception.BusinessLogicException;
 import br.com.SpringBookstore.SpringBookstore.exception.ConflictException;
 import br.com.SpringBookstore.SpringBookstore.repository.AuthorRepository;
+import br.com.SpringBookstore.SpringBookstore.repository.BookRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +18,24 @@ public class AuthorService {
 
     @Autowired
     private AuthorRepository repository;
+
+    @Autowired
+    private BookRepository bookRepository;
+
+    public void validaAuthorFields(AuthorDTO dto) {
+        if (dto.getName() == null || dto.getName().trim().isEmpty()) {
+            throw new BusinessLogicException("O nome do autor é obrigatório.");
+        }
+        if (dto.getNacionalidade() == null) {
+            throw new BusinessLogicException("A nacionalidade do autor é obrigatória.");
+        }
+        if (dto.getDataNascimento() == null) {
+            throw new BusinessLogicException("A data de nascimento do autor é obrigatória.");
+        }
+        if (dto.getBiografia() == null) {
+            throw new BusinessLogicException("A biografia do autor é obrigatória.");
+        }
+    }
 
     // Buscar todos os autores e retornar como DTO
     public List<AuthorDTO> findAll() {
@@ -53,12 +73,13 @@ public class AuthorService {
         }
 
         // Validar campos obrigatórios
-        if (dto.getName() == null || dto.getName().trim().isEmpty()) {
-            throw new BusinessLogicException("O nome do autor é obrigatório.");
-        }
-        if (dto.getDataNascimento() == null) {
-            throw new BusinessLogicException("A data de nascimento do autor é obrigatória.");
-        }
+        validaAuthorFields(dto);
+
+        // Buscar autores no banco pelos IDs informados no DTO
+        List<Book> books = dto.getBookIds().stream()
+                .map(id -> bookRepository.findById(id)
+                        .orElseThrow(() -> new BusinessLogicException("Autor não encontrado: " + id)))
+                .collect(Collectors.toList());
 
         // Criar a entidade a partir do DTO
         Author author = new Author(
@@ -66,7 +87,7 @@ public class AuthorService {
                 dto.getNacionalidade(),
                 dto.getDataNascimento(),
                 dto.getBiografia(),
-                null // Livros podem ser adicionados posteriormente
+                books // Livros podem ser adicionados posteriormente
         );
 
         // Salvar o autor no banco de dados
@@ -95,12 +116,7 @@ public class AuthorService {
         }
 
         // Validar campos obrigatórios
-        if (dto.getName() == null || dto.getName().trim().isEmpty()) {
-            throw new BusinessLogicException("O nome do autor é obrigatório.");
-        }
-        if (dto.getDataNascimento() == null) {
-            throw new BusinessLogicException("A data de nascimento do autor é obrigatória.");
-        }
+        validaAuthorFields(dto);
 
         // Atualizar os campos da entidade
         entity.setName(dto.getName());
