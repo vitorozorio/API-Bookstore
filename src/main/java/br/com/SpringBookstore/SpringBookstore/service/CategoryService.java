@@ -17,6 +17,15 @@ public class CategoryService {
     @Autowired
     private CategoryRepository repository;
 
+    protected void validateCategoryFields(CategoryDTO dto) {
+        if (dto.getName() == null || dto.getName().trim().isEmpty()) {
+            throw new BusinessLogicException("O nome do Categoria é obrigatória.");
+        }
+        if (dto.getDescricao() == null) {
+            throw new BusinessLogicException("A Descrição é obrigatória.");
+        }
+    }
+
     // Buscar todos as Categoriaes e retornar como DTO
     public List<CategoryDTO> findAll() {
         return repository.findAll().stream()
@@ -46,13 +55,8 @@ public class CategoryService {
             throw new ConflictException("Categoria já cadastrada: " + dto.getName());
         }
 
-        // Validar campos obrigatórias
-        if (dto.getName() == null || dto.getName().trim().isEmpty()) {
-            throw new BusinessLogicException("O nome do Categoria é obrigatória.");
-        }
-        if (dto.getDescricao() == null) {
-            throw new BusinessLogicException("A Descrição é obrigatória.");
-        }
+        // Validação dos campos obrigatórios
+        validateCategoryFields(dto);
 
         // Criar a entidade a partir do DTO
         Category Category = new Category(
@@ -82,13 +86,8 @@ public class CategoryService {
             throw new ConflictException("Categoria já cadastrada: " + dto.getName());
         }
 
-        // Validar campos obrigatórios
-        if (dto.getName() == null || dto.getName().trim().isEmpty()) {
-            throw new BusinessLogicException("O nome do Categoria é obrigatória.");
-        }
-        if (dto.getDescricao() == null) {
-            throw new BusinessLogicException("A data de nascimento do Categoria é obrigatória.");
-        }
+        // Validação dos campos obrigatórios
+        validateCategoryFields(dto);
 
         // Atualizar os campos da entidade
         entity.setName(dto.getName());

@@ -34,7 +34,7 @@ public class BookService {
     private ReviewRepository reviewRepository;
 
     // Método de validação de campos obrigatórios
-    private void validateBookFields(BookDTO dto) {
+    protected void validateBookFields(BookDTO dto) {
         if (dto.getTitle() == null || dto.getTitle().trim().isEmpty()) {
             throw new BusinessLogicException("O título do livro é obrigatório.");
         }

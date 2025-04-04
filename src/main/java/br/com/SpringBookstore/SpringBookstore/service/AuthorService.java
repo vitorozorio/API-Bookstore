@@ -22,7 +22,7 @@ public class AuthorService {
     @Autowired
     private BookRepository bookRepository;
 
-    public void validaAuthorFields(AuthorDTO dto) {
+    protected void validaAuthorFields(AuthorDTO dto) {
         if (dto.getName() == null || dto.getName().trim().isEmpty()) {
             throw new BusinessLogicException("O nome do autor é obrigatório.");
         }
@@ -87,7 +87,7 @@ public class AuthorService {
                 dto.getNacionalidade(),
                 dto.getDataNascimento(),
                 dto.getBiografia(),
-                books // Livros podem ser adicionados posteriormente
+                books
         );
 
         // Salvar o autor no banco de dados

@@ -1,5 +1,6 @@
 package br.com.SpringBookstore.SpringBookstore.service;
 
+import br.com.SpringBookstore.SpringBookstore.domain.DTO.BookDTO;
 import br.com.SpringBookstore.SpringBookstore.domain.Publisher;
 import br.com.SpringBookstore.SpringBookstore.domain.DTO.PublisherDTO;
 import br.com.SpringBookstore.SpringBookstore.exception.BusinessLogicException;
@@ -16,6 +17,15 @@ public class PublisherService {
 
     @Autowired
     private PublisherRepository publisherRepository;
+
+    protected void validatePublisherFields(PublisherDTO dto) {
+        if (dto.getName() == null || dto.getName().trim().isEmpty()) {
+            throw new BusinessLogicException("O nome do editora é obrigatório.");
+        }
+        if (dto.getEndereco() == null) {
+            throw new BusinessLogicException("O endereço da editora é obrigatório.");
+        }
+    }
 
     // Buscar todoas as editora e retornar como DTO
     public List<PublisherDTO> findAll() {
@@ -46,13 +56,8 @@ public class PublisherService {
             throw new ConflictException("Editora já cadastrada: " + dto.getName());
         }
 
-        // Validar campos obrigatórias
-        if (dto.getName() == null || dto.getName().trim().isEmpty()) {
-            throw new BusinessLogicException("O nome do editora é obrigatório.");
-        }
-        if (dto.getEndereco() == null) {
-            throw new BusinessLogicException("O endereço da editora é obrigatório.");
-        }
+        // Validação dos campos obrigatórios
+        validatePublisherFields(dto);
 
         // Criar a entidade a partir do DTO
         Publisher Publisher = new Publisher(
@@ -82,13 +87,8 @@ public class PublisherService {
             throw new ConflictException("Editora já cadastrada: " + dto.getName());
         }
 
-        // Validar campos obrigatórios
-        if (dto.getName() == null || dto.getName().trim().isEmpty()) {
-            throw new BusinessLogicException("O nome do editora é obrigatório.");
-        }
-        if (dto.getEndereco() == null) {
-            throw new BusinessLogicException("O endereço da editora é obrigatório.");
-        }
+        // Validação dos campos obrigatórios
+        validatePublisherFields(dto);
 
         // Atualizar os campos da entidade
         entity.setName(dto.getName());
