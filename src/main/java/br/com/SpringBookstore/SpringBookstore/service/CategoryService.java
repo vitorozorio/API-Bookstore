@@ -17,94 +17,79 @@ public class CategoryService {
     @Autowired
     private CategoryRepository repository;
 
+    // Valida os campos obrigatórios de uma categoria
     protected void validateCategoryFields(CategoryDTO dto) {
         if (dto.getName() == null || dto.getName().trim().isEmpty()) {
-            throw new BusinessLogicException("O nome do Categoria é obrigatória.");
+            throw new BusinessLogicException("O nome da categoria é obrigatório.");
         }
-        if (dto.getDescricao() == null) {
-            throw new BusinessLogicException("A Descrição é obrigatória.");
+        if (dto.getDescricao() == null || dto.getDescricao().trim().isEmpty()) {
+            throw new BusinessLogicException("A descrição da categoria é obrigatória.");
         }
     }
 
-    // Buscar todos as Categoriaes e retornar como DTO
-    public List<CategoryDTO> findAll() {
-        return repository.findAll().stream()
-                .map(Category -> new CategoryDTO(
-                        Category.getId(),
-                        Category.getName(),
-                        Category.getDescricao()
-                ))
-                .collect(Collectors.toList());
-    }
-
-    // Buscar uma Categoria pelo ID e retornar como DTO
-    public CategoryDTO findById(String id) {
-        Category Category = repository.findById(id)
-                .orElseThrow(() -> new BusinessLogicException("Categoria não encontrada com o ID: " + id));
+    // Converte uma entidade Category para CategoryDTO
+    protected CategoryDTO toDTO(Category category) {
         return new CategoryDTO(
-                Category.getId(),
-                Category.getName(),
-                Category.getDescricao()
+                category.getId(),
+                category.getName(),
+                category.getDescricao()
         );
     }
 
-    // Criar uma nova Categoria a partir de dados fornecidos
+    // Retorna todas as categorias cadastradas
+    public List<CategoryDTO> findAll() {
+        return repository.findAll()
+                .stream()
+                .map(this::toDTO)
+                .collect(Collectors.toList());
+    }
+
+    // Busca uma categoria pelo ID
+    public CategoryDTO findById(String id) {
+        Category category = repository.findById(id)
+                .orElseThrow(() -> new BusinessLogicException("Categoria não encontrada com o ID: " + id));
+        return toDTO(category);
+    }
+
+    // Insere uma nova categoria
     public CategoryDTO insert(CategoryDTO dto) {
-        // Validar se o nome do Categoria já existe
         if (repository.findByName(dto.getName()) != null) {
             throw new ConflictException("Categoria já cadastrada: " + dto.getName());
         }
 
-        // Validação dos campos obrigatórios
         validateCategoryFields(dto);
 
-        // Criar a entidade a partir do DTO
-        Category Category = new Category(
+        Category category = new Category(
                 dto.getName(),
                 dto.getDescricao()
         );
 
-        // Salvar a Categoria no banco de dados
-        Category savedCategory = repository.save(Category);
+        Category savedCategory = repository.save(category);
 
-        // Retornar a Categoria como DTO
-        return new CategoryDTO(
-                savedCategory.getId(),
-                savedCategory.getName(),
-                savedCategory.getDescricao()
-        );
+        return toDTO(savedCategory);
     }
 
-    // Atualizar uma Categoria existente a partir de dados fornecidos
+    // Atualiza uma categoria existente
     public CategoryDTO update(String id, CategoryDTO dto) {
-        // Buscar o Categoria pelo ID
-        Category entity = repository.findById(id)
+        Category category = repository.findById(id)
                 .orElseThrow(() -> new BusinessLogicException("Categoria não encontrada com o ID: " + id));
 
-        // Validar se o novo nome está sendo alterado para um nome já existente
-        if (!entity.getName().equalsIgnoreCase(dto.getName()) && repository.findByName(dto.getName()) != null) {
+        if (!category.getName().equalsIgnoreCase(dto.getName()) &&
+                repository.findByName(dto.getName()) != null) {
             throw new ConflictException("Categoria já cadastrada: " + dto.getName());
         }
 
-        // Validação dos campos obrigatórios
         validateCategoryFields(dto);
 
-        // Atualizar os campos da entidade
-        entity.setName(dto.getName());
-        entity.setDescricao(dto.getDescricao());
-        
-        // Salvar as alterações no banco de dados
-        Category updatedCategory = repository.save(entity);
+        category.setName(dto.getName());
+        category.setDescricao(dto.getDescricao());
 
-        // Retornar a Categoria como DTO
-        return new CategoryDTO(
-                updatedCategory.getId(),
-                updatedCategory.getName(),
-                updatedCategory.getDescricao()
-        );
+        Category updatedCategory = repository.save(category);
+
+        return toDTO(updatedCategory);
     }
 
-    // Deletar uma Categoria pelo ID
+    // Deleta uma categoria pelo ID
     public void delete(String id) {
         repository.findById(id)
                 .orElseThrow(() -> new BusinessLogicException("Categoria não encontrada com o ID: " + id));

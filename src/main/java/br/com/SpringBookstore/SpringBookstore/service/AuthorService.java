@@ -23,7 +23,7 @@ public class AuthorService {
     private BookRepository bookRepository;
 
     // Validação de campos obrigatórios
-    protected void validaAuthorFields(AuthorDTO dto) {
+    protected void validateAuthorFields(AuthorDTO dto) {
         if (dto.getName() == null || dto.getName().trim().isEmpty()) {
             throw new BusinessLogicException("O nome do autor é obrigatório.");
         }
@@ -60,7 +60,7 @@ public class AuthorService {
                 .collect(Collectors.toList());
 
         return new Author(
-                dto.getName(),
+                dto.getName().trim(),
                 dto.getNacionalidade(),
                 dto.getDataNascimento(),
                 dto.getBiografia(),
@@ -84,45 +84,58 @@ public class AuthorService {
 
     // Inserir novo autor
     public AuthorDTO insert(AuthorDTO dto) {
-        if (repository.findByName(dto.getName()) != null) {
-            throw new ConflictException("Autor já cadastrado: " + dto.getName());
-        }
+        validateAuthorFields(dto);
 
-        validaAuthorFields(dto);
+        String nameTrimmed = dto.getName().trim();
+        Author existingAuthor = repository.findByName(nameTrimmed);
+        if (existingAuthor != null) {
+            throw new ConflictException("Autor já cadastrado: " + nameTrimmed);
+        }
 
         Author author = toEntity(dto);
         Author savedAuthor = repository.save(author);
 
+        // Atualiza os livros para manter a relação bidirecional
+        for (Book book : author.getBooks()) {
+            book.getAuthors().add(savedAuthor);
+            bookRepository.save(book);
+        }
+
         return toDTO(savedAuthor);
     }
 
+
     // Atualizar autor existente
     public AuthorDTO update(String id, AuthorDTO dto) {
+        validateAuthorFields(dto);
+
         Author entity = repository.findById(id)
                 .orElseThrow(() -> new BusinessLogicException("Autor não encontrado com o ID: " + id));
 
-        if (!entity.getName().equalsIgnoreCase(dto.getName())
-                && repository.findByName(dto.getName()) != null) {
-            throw new ConflictException("Autor já cadastrado: " + dto.getName());
+        String newNameTrimmed = dto.getName().trim();
+        if (!entity.getName().equalsIgnoreCase(newNameTrimmed)
+                && repository.findByName(newNameTrimmed) != null) {
+            throw new ConflictException("Autor já cadastrado: " + newNameTrimmed);
         }
 
-        validaAuthorFields(dto);
-
-        // Atualiza os campos (menos livros, assumindo que não muda aqui)
-        entity.setName(dto.getName());
+        entity.setName(newNameTrimmed);
         entity.setNacionalidade(dto.getNacionalidade());
         entity.setDataNascimento(dto.getDataNascimento());
         entity.setBiografia(dto.getBiografia());
 
         Author updatedAuthor = repository.save(entity);
-
         return toDTO(updatedAuthor);
     }
 
-    // Deletar autor por ID
+    // Deletar autor por ID (com verificação de livros)
     public void delete(String id) {
-        repository.findById(id)
+        Author author = repository.findById(id)
                 .orElseThrow(() -> new BusinessLogicException("Autor não encontrado com o ID: " + id));
+
+        if (author.getBooks() != null && !author.getBooks().isEmpty()) {
+            throw new BusinessLogicException("Não é possível excluir um autor com livros associados.");
+        }
+
         repository.deleteById(id);
     }
 }

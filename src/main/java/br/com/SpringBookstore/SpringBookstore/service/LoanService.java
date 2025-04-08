@@ -30,7 +30,7 @@ public class LoanService {
     @Autowired
     private UserRepository userRepository;
 
-    // Método de validação de campos obrigatórios
+    // Valida os campos obrigatórios do empréstimo
     protected void validateLoanFields(LoanDTO dto) {
         if (dto.getUserId() == null || dto.getUserId().trim().isEmpty()) {
             throw new BusinessLogicException("O ID do usuário é obrigatório.");
@@ -40,7 +40,7 @@ public class LoanService {
         }
     }
 
-    // Método auxiliar para converter entidade para DTO
+    // Converte entidade Loan para DTO
     private LoanDTO toDTO(Loan loan) {
         return new LoanDTO(
                 loan.getId(),
@@ -48,95 +48,81 @@ public class LoanService {
                 loan.getExpectedReturnDate(),
                 loan.getActualReturnDate(),
                 loan.getStatus(),
-                loan.getUser().getId(), // Apenas o ID do usuário
-                loan.getBook().getId()  // Apenas o ID do livro
+                loan.getUser().getId(),
+                loan.getBook().getId()
         );
     }
 
-    // Buscar todos os empréstimos e retornar como DTO
+    // Lista todos os empréstimos
     public List<LoanDTO> findAll() {
         return loanRepository.findAll().stream()
-                .map(this::toDTO) // Converte cada entidade para DTO
+                .map(this::toDTO)
                 .collect(Collectors.toList());
     }
 
-    // Buscar um empréstimo pelo ID e retornar como DTO
+    // Busca um empréstimo pelo ID
     public LoanDTO findById(String id) {
         Loan loan = loanRepository.findById(id)
                 .orElseThrow(() -> new BusinessLogicException("Empréstimo não encontrado com o ID: " + id));
-        updateLoanStatus(loan); // Atualiza o status do empréstimo (verifica atraso)
+        updateLoanStatus(loan); // Atualiza status caso esteja atrasado
         return toDTO(loan);
     }
 
-    // Inserir um novo empréstimo (alugar um livro)
+    // Cria um novo empréstimo (aluguel de livro)
     public LoanDTO insert(LoanDTO dto) {
-        // Validação dos campos obrigatórios
         validateLoanFields(dto);
 
-        // Buscar o usuário no banco pelo ID informado no DTO
         User user = userRepository.findById(dto.getUserId())
                 .orElseThrow(() -> new BusinessLogicException("Usuário não encontrado."));
 
-        // Buscar o livro no banco pelo ID informado no DTO
         Book book = bookRepository.findById(dto.getBookId())
                 .orElseThrow(() -> new BusinessLogicException("Livro não encontrado."));
 
-        // Verificar se o livro já está emprestado
         Optional<Loan> existingLoan = loanRepository.findByBookIdAndStatus(dto.getBookId(), LoanStatus.ACTIVE);
         if (existingLoan.isPresent()) {
             throw new ConflictException("O livro já está emprestado.");
         }
 
-        // Criar a entidade Loan
         Loan loan = new Loan(
-                LocalDateTime.now(), // Data do empréstimo é a data atual
-                LocalDateTime.now().plusDays(7), // Data de devolução esperada (7 dias após o empréstimo)
-                LoanStatus.ACTIVE, // Status inicial: ACTIVE
+                LocalDateTime.now(),
+                LocalDateTime.now().plusDays(7),
+                LoanStatus.ACTIVE,
                 user,
                 book
         );
 
-        // Salvar no banco
         Loan savedLoan = loanRepository.save(loan);
-
-        // Retornar o DTO do empréstimo salvo
         return toDTO(savedLoan);
     }
 
-    // Atualizar um empréstimo existente (devolver um livro)
+    // Finaliza um empréstimo (devolução do livro)
     public LoanDTO update(String id, LoanDTO dto) {
-        // Buscar o empréstimo pelo ID
         Loan loan = loanRepository.findById(id)
                 .orElseThrow(() -> new BusinessLogicException("Empréstimo não encontrado com o ID: " + id));
 
-        // Verificar se o livro já foi devolvido
         if (loan.getStatus() == LoanStatus.RETURNED) {
             throw new BusinessLogicException("O livro já foi devolvido.");
         }
 
-        // Atualizar a data de devolução real e o status
         loan.setActualReturnDate(LocalDateTime.now());
         loan.setStatus(LoanStatus.RETURNED);
 
-        // Salvar as alterações no banco de dados
         Loan updatedLoan = loanRepository.save(loan);
-
-        // Retornar o empréstimo como DTO
         return toDTO(updatedLoan);
     }
 
-    // Deletar um empréstimo pelo ID
+    // Remove um empréstimo pelo ID
     public void delete(String id) {
         loanRepository.findById(id)
                 .orElseThrow(() -> new BusinessLogicException("Empréstimo não encontrado com o ID: " + id));
         loanRepository.deleteById(id);
     }
 
-    // Método para atualizar o status do empréstimo (verifica atraso)
+    // Atualiza o status do empréstimo caso esteja atrasado
     private void updateLoanStatus(Loan loan) {
         if (loan.getStatus() == LoanStatus.ACTIVE && LocalDateTime.now().isAfter(loan.getExpectedReturnDate())) {
-            loan.setStatus(LoanStatus.OVERDUE); // Altera o status para OVERDUE se estiver atrasado
-            loanRepository.save(loan); // Salva a alteração no banco de dados
+            loan.setStatus(LoanStatus.OVERDUE);
+            loanRepository.save(loan);
         }
     }
 }
