@@ -1,0 +1,151 @@
+
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>📦 Classes de Domínio do Sistema de Biblioteca</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f9f9f9;
+            color: #333;
+            margin: 40px;
+        }
+        .container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        h1, h2, h3 {
+            color: #2c3e50;
+        }
+        .class-box {
+            background-color: #eef6ff;
+            border-left: 5px solid #007acc;
+            margin-bottom: 20px;
+            padding: 20px;
+            border-radius: 8px;
+        }
+        ul {
+            margin-left: 20px;
+        }
+        code {
+            background-color: #eef;
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>📦 Classes de Domínio do Sistema de Gerenciamento de Biblioteca</h1>
+
+    <p>Este documento descreve as principais entidades (classes de domínio) utilizadas no sistema.</p>
+
+    <div class="class-box">
+        <h2>📘 Book</h2>
+        <ul>
+            <li><strong>id</strong>: Identificador único</li>
+            <li><strong>title</strong>: Título</li>
+            <li><strong>isbn</strong>: Código ISBN</li>
+            <li><strong>publicationYear</strong>: Ano de publicação</li>
+            <li><strong>publisher</strong>: Editora</li>
+            <li><strong>availableQuantity</strong>: Quantidade disponível</li>
+            <li><strong>status</strong>: Status (AVAILABLE, RESERVED, LOANED, DAMAGED, LOST)</li>
+            <li><strong>authors</strong>: Lista de autores</li>
+            <li><strong>reviews</strong>: Lista de avaliações</li>
+            <li><strong>category</strong>: Categoria</li>
+        </ul>
+    </div>
+
+    <div class="class-box">
+        <h2>✍️ Author</h2>
+        <ul>
+            <li><strong>id</strong>: Identificador único</li>
+            <li><strong>name</strong>: Nome</li>
+            <li><strong>nationality</strong>: Nacionalidade</li>
+            <li><strong>biography</strong>: Biografia (opcional)</li>
+            <li><strong>books</strong>: Lista de livros</li>
+        </ul>
+    </div>
+
+    <div class="class-box">
+        <h2>🏷️ Category</h2>
+        <ul>
+            <li><strong>id</strong>: Identificador único</li>
+            <li><strong>name</strong>: Nome da categoria</li>
+        </ul>
+    </div>
+
+    <div class="class-box">
+        <h2>⭐ Review</h2>
+        <ul>
+            <li><strong>id</strong>: Identificador único</li>
+            <li><strong>user</strong>: Usuário que avaliou</li>
+            <li><strong>book</strong>: Livro avaliado</li>
+            <li><strong>comment</strong>: Comentário</li>
+            <li><strong>rating</strong>: Nota (1 a 5)</li>
+        </ul>
+    </div>
+
+    <div class="class-box">
+        <h2>📅 Loan</h2>
+        <ul>
+            <li><strong>id</strong>: Identificador único</li>
+            <li><strong>user</strong>: Usuário que emprestou</li>
+            <li><strong>book</strong>: Livro emprestado</li>
+            <li><strong>loanDate</strong>: Data do empréstimo</li>
+            <li><strong>expectedReturnDate</strong>: Data esperada para devolução</li>
+            <li><strong>actualReturnDate</strong>: Data de devolução</li>
+            <li><strong>status</strong>: Status (ACTIVE, RETURNED, OVERDUE)</li>
+        </ul>
+    </div>
+
+    <div class="class-box">
+        <h2>⏳ Reservation</h2>
+        <ul>
+            <li><strong>id</strong>: Identificador único</li>
+            <li><strong>user</strong>: Usuário que reservou</li>
+            <li><strong>book</strong>: Livro reservado</li>
+            <li><strong>reservationDate</strong>: Data da reserva</li>
+            <li><strong>status</strong>: Status (PENDING, COMPLETED, CANCELLED)</li>
+        </ul>
+    </div>
+
+    <div class="class-box">
+        <h2>👤 User</h2>
+        <ul>
+            <li><strong>id</strong>: Identificador único</li>
+            <li><strong>name</strong>: Nome</li>
+            <li><strong>email</strong>: E-mail</li>
+            <li><strong>phoneNumber</strong>: Telefone</li>
+            <li><strong>address</strong>: Endereço</li>
+            <li><strong>loans</strong>: Lista de empréstimos</li>
+            <li><strong>reservations</strong>: Lista de reservas</li>
+            <li><strong>reviews</strong>: Lista de avaliações</li>
+        </ul>
+    </div>
+
+    <div class="class-box">
+        <h2>🧑‍💼 Employee</h2>
+        <ul>
+            <li><strong>id</strong>: Identificador único</li>
+            <li><strong>name</strong>: Nome</li>
+            <li><strong>email</strong>: E-mail</li>
+            <li><strong>role</strong>: Cargo ou função</li>
+        </ul>
+    </div>
+
+    <div class="class-box">
+        <h2>📊 Enums</h2>
+        <ul>
+            <li><strong>BookStatus</strong>: AVAILABLE, RESERVED, LOANED, DAMAGED, LOST</li>
+            <li><strong>LoanStatus</strong>: ACTIVE, RETURNED, OVERDUE</li>
+            <li><strong>ReservationStatus</strong>: PENDING, COMPLETED, CANCELLED</li>
+            <li><strong>Rating</strong>: ONE_STAR, TWO_STARS, THREE_STARS, FOUR_STARS, FIVE_STARS</li>
+        </ul>
+    </div>
+</div>
+</body>
+</html>
