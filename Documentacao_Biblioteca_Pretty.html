@@ -1,0 +1,124 @@
+
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Documentação Funcional do Sistema de Gerenciamento de Biblioteca</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 40px;
+            background-color: #f0f2f5;
+            color: #333;
+            line-height: 1.6;
+        }
+        h1, h2, h3 {
+            color: #2c3e50;
+        }
+        section {
+            margin-bottom: 30px;
+        }
+        .emoji-title {
+            font-size: 1.3em;
+            margin-top: 20px;
+        }
+        .container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+        }
+        ul, li {
+            margin-left: 20px;
+        }
+        code {
+            background-color: #eef;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.95em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📚 Documentação Funcional do Sistema de Gerenciamento de Biblioteca</h1>
+
+        <section>
+            <h2 class="emoji-title">🔍 1. Visão Geral</h2>
+            <p>Este sistema tem como objetivo informatizar bibliotecas de pequeno, médio e grande porte, atendendo tanto bibliotecas públicas quanto privadas, com funcionalidades modernas, responsivas e escaláveis. Além do módulo administrativo, o sistema possui um painel comercial, área de suporte técnico e telas específicas para usuários finais, funcionários da biblioteca e administradores.</p>
+        </section>
+
+        <section>
+            <h2 class="emoji-title">🧩 2. Módulos e Telas do Sistema</h2>
+            <h3>📈 2.1. Módulo Comercial (Pré-venda)</h3>
+            <ul>
+                <li>Página Inicial</li>
+                <li>Planos e Preços</li>
+                <li>Solicitação de Demonstração</li>
+                <li>Contato Comercial</li>
+            </ul>
+
+            <h3>🗃️ 2.2. Módulo Administrativo (Sistema Interno)</h3>
+            <strong>2.2.1. Painel do Funcionário (Bibliotecário)</strong>
+            <ul>
+                <li>Dashboard</li>
+                <li>Gestão de Livros, Autores e Categorias</li>
+                <li>Gestão de Usuários</li>
+                <li>Empréstimos e Reservas</li>
+                <li>Avaliações</li>
+                <li>Relatórios</li>
+            </ul>
+
+            <strong>2.2.2. Painel do Administrador (Superusuário)</strong>
+            <ul>
+                <li>Todos os recursos do bibliotecário</li>
+                <li>Gestão de Funcionários</li>
+                <li>Configurações Gerais</li>
+                <li>Backup e Restauração</li>
+                <li>Reindexação de base</li>
+                <li>Logs de Atividades</li>
+            </ul>
+
+            <h3>🛠️ 2.3. Módulo de Suporte Técnico</h3>
+            <ul>
+                <li>Dashboard do Suporte</li>
+                <li>Chamados</li>
+                <li>Base de Conhecimento</li>
+                <li>Gestão de Clientes Ativos</li>
+            </ul>
+
+            <h3>📖 2.4. Módulo do Usuário Final (Leitor)</h3>
+            <ul>
+                <li>Login/Cadastro</li>
+                <li>Catálogo Público (OPAC)</li>
+                <li>Reserva de Livros</li>
+                <li>Área do Usuário</li>
+            </ul>
+        </section>
+
+        <section>
+            <h2 class="emoji-title">👥 3. Perfis de Acesso</h2>
+            <ul>
+                <li><strong>Visitante:</strong> Tela comercial, contato, catálogo público</li>
+                <li><strong>Leitor:</strong> Login, consulta, reserva, avaliação</li>
+                <li><strong>Funcionário:</strong> Gestão de livros, usuários, empréstimos</li>
+                <li><strong>Administrador:</strong> Todas as funcionalidades + config geral</li>
+                <li><strong>Suporte:</strong> Tela de chamados e gestão de clientes</li>
+            </ul>
+        </section>
+
+        <section>
+            <h2 class="emoji-title">⚙️ 4. Recursos Técnicos Planejados</h2>
+            <ul>
+                <li>API RESTful para integração</li>
+                <li>Responsividade total (desktop, tablet, celular)</li>
+                <li>Controle de permissões por usuário</li>
+                <li>Relatórios exportáveis (PDF, Excel)</li>
+                <li>Suporte multilíngue (Português, Inglês)</li>
+                <li>Backups automáticos e manuais</li>
+                <li>Integração com sistemas de autenticação (<code>LDAP</code>, <code>OAuth</code>)</li>
+            </ul>
+        </section>
+    </div>
+</body>
+</html>
