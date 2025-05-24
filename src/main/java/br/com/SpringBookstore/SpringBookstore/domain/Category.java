@@ -15,26 +15,19 @@ public class Category implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
-    private String id; // Identificador único da categoria.
+    private String id;
 
-    @NotBlank(message = "O nome da categoria é obrigatório.")
-    @Size(max = 100, message = "O nome da categoria deve ter no máximo 100 caracteres.")
-    private String name; // Nome da categoria (ex.: Ficção, Fantasia, Drama).
+    private String name;
+    private String descricao;
 
-    @Size(max = 500, message = "A descrição da categoria deve ter no máximo 500 caracteres.")
-    private String descricao; // Breve descrição ou detalhes adicionais da categoria.
-
-    // Construtor vazio (necessário para frameworks como Spring Data)
     public Category() {
     }
 
-    // Construtor com parâmetros (sem o id, pois será gerado automaticamente pelo MongoDB)
     public Category(String name, String descricao) {
         this.name = name;
         this.descricao = descricao;
     }
 
-    // Getters e Setters
     public String getId() {
         return id;
     }

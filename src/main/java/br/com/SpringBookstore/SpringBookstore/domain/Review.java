@@ -17,26 +17,20 @@ public class Review implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
-    private String id; // Identificador único da avaliação.
+    private String id;
 
-    @Size(max = 1000, message = "O comentário deve ter no máximo 1000 caracteres.")
-    private String comment; // Comentário deixado pelo usuário (opcional).
-
-    @Min(value = 1, message = "A nota deve ser no mínimo 1.")
-    @Max(value = 5, message = "A nota deve ser no máximo 5.")
-    private Integer rating; // Nota dada ao livro (de 1 a 5).
+    private String comment;
+    private Integer rating;
 
     @DBRef
-    private User user; // Usuário que fez a avaliação.
+    private User user;
 
     @DBRef
-    private Book book; // Livro avaliado.
+    private Book book;
 
-    // Construtor vazio (necessário para frameworks como Spring Data)
     public Review() {
     }
 
-    // Construtor com parâmetros (sem o id, pois será gerado automaticamente)
     public Review(String comment, Integer rating, User user, Book book) {
         this.comment = comment;
         this.rating = rating;
@@ -85,13 +79,4 @@ public class Review implements Serializable {
         this.book = book;
     }
 
-    // Método para verificar se a avaliação é positiva (nota >= 4)
-    public boolean isPositive() {
-        return rating != null && rating >= 4;
-    }
-
-    // Método para verificar se a avaliação é negativa (nota <= 2)
-    public boolean isNegative() {
-        return rating != null && rating <= 2;
-    }
 }

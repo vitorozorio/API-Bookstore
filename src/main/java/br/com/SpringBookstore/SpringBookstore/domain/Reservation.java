@@ -17,25 +17,20 @@ public class Reservation implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
-    private String id; // Identificador único da reserva.
+    private String id;
 
-    @NotNull(message = "A data da reserva é obrigatória.")
-    private LocalDateTime reservationDate; // Data e hora em que a reserva foi feita.
-
-    @NotNull(message = "O status da reserva é obrigatório.")
-    private ReservationStatus status; // Status da reserva (ex.: PENDING, CONFIRMED, CANCELLED).
+    private LocalDateTime reservationDate;
+    private ReservationStatus status;
 
     @DBRef
-    private User user; // Usuário que fez a reserva.
+    private User user;
 
     @DBRef
-    private Book book; // Livro reservado.
+    private Book book;
 
-    // Construtor vazio (necessário para frameworks como Spring Data)
     public Reservation() {
     }
 
-    // Construtor com parâmetros (sem o id, pois será gerado automaticamente)
     public Reservation(LocalDateTime reservationDate, ReservationStatus status, User user, Book book) {
         this.reservationDate = reservationDate;
         this.status = status;
@@ -43,7 +38,6 @@ public class Reservation implements Serializable {
         this.book = book;
     }
 
-    // Getters e Setters
     public String getId() {
         return id;
     }
@@ -84,13 +78,4 @@ public class Reservation implements Serializable {
         this.book = book;
     }
 
-    // Método para verificar se a reserva está ativa
-    public boolean isActive() {
-        return ReservationStatus.PENDING.equals(status) || ReservationStatus.CONFIRMED.equals(status);
-    }
-
-    // Método para verificar se a reserva está expirada
-    public boolean isExpired() {
-        return ReservationStatus.CANCELLED.equals(status) || LocalDateTime.now().isAfter(reservationDate.plusDays(7));
-    }
 }

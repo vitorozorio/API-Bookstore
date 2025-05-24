@@ -19,42 +19,27 @@ public class Book implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
-    private String id; // Identificador único do livro.
+    private String id;
 
-    @NotBlank(message = "O título do livro é obrigatório.")
-    private String title; // Título do livro.
-
-    @NotBlank(message = "O ISBN do livro é obrigatório.")
-    private String isbn; // Código ISBN.
-
-    @NotNull(message = "O ano de publicação é obrigatório.")
-    @Min(value = 0, message = "O ano de publicação deve ser maior ou igual a zero.")
-    private Integer publicationYear; // Ano de publicação.
-
-    @NotBlank(message = "A editora do livro é obrigatória.")
-    private String publisher; // Editora.
-
-    @NotNull(message = "A quantidade disponível é obrigatória.")
-    @Min(value = 0, message = "A quantidade disponível deve ser maior ou igual a zero.")
-    private Integer availableQuantity; // Quantidade disponível.
-
-    @NotNull(message = "O status do livro é obrigatório.")
-    private BookStatus status; // Status atual do livro.
+    private String title;
+    private String isbn;
+    private Integer publicationYear;
+    private String publisher;
+    private Integer availableQuantity;
+    private BookStatus status;
 
     @DBRef
-    private Category category; // Categoria do livro.
+    private Category category;
 
     @DBRef
-    private List<Author> authors; // Autores do livro.
+    private List<Author> authors;
 
     @DBRef
-    private List<Review> reviews; // Lista de avaliações/feedback feitas por usuários.
+    private List<Review> reviews;
 
-    // Construtor vazio (necessário para frameworks como Spring Data)
     public Book() {
     }
 
-    // Construtor com parâmetros (sem o id, pois será gerado automaticamente)
     public Book(String title, String isbn, Integer publicationYear, String publisher,
                 Integer availableQuantity, BookStatus status, Category category, List<Author> authors, List<Review> reviews) {
         this.title = title;
@@ -68,7 +53,6 @@ public class Book implements Serializable {
         this.reviews = reviews;
     }
 
-    // Getters e Setters
     public String getId() {
         return id;
     }

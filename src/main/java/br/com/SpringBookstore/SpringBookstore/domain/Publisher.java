@@ -15,26 +15,19 @@ public class Publisher implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
-    private String id; // Identificador único da editora.
+    private String id;
 
-    @NotBlank(message = "O nome da editora é obrigatório.")
-    @Size(max = 100, message = "O nome da editora deve ter no máximo 100 caracteres.")
-    private String name; // Nome da editora.
+    private String name;
+    private String endereco;
 
-    @Size(max = 500, message = "O endereço da editora deve ter no máximo 500 caracteres.")
-    private String endereco; // Endereço da editora.
-
-    // Construtor vazio (necessário para frameworks como Spring Data)
     public Publisher() {
     }
 
-    // Construtor com parâmetros (sem o id, pois será gerado automaticamente pelo MongoDB)
     public Publisher(String name, String endereco) {
         this.name = name;
         this.endereco = endereco;
     }
 
-    // Getters e Setters
     public String getId() {
         return id;
     }

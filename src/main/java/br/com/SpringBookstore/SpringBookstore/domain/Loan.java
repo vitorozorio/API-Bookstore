@@ -17,30 +17,22 @@ public class Loan implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
-    private String id; // Identificador único do empréstimo.
+    private String id;
 
-    @NotNull(message = "A data do empréstimo é obrigatória.")
-    private LocalDateTime loanDate; // Data e hora em que o empréstimo foi realizado.
-
-    @NotNull(message = "A data de devolução esperada é obrigatória.")
-    private LocalDateTime expectedReturnDate; // Data e hora esperada para a devolução.
-
-    private LocalDateTime actualReturnDate; // Data e hora real da devolução (opcional).
-
-    @NotNull(message = "O status do empréstimo é obrigatório.")
-    private LoanStatus status; // Status do empréstimo (ex.: ACTIVE, RETURNED).
+    private LocalDateTime loanDate;
+    private LocalDateTime expectedReturnDate;
+    private LocalDateTime actualReturnDate;
+    private LoanStatus status;
 
     @DBRef
-    private User user; // Usuário que realizou o empréstimo.
+    private User user;
 
     @DBRef
-    private Book book; // Livro relacionado ao empréstimo.
+    private Book book;
 
-    // Construtor vazio (necessário para frameworks como Spring Data)
     public Loan() {
     }
 
-    // Construtor com parâmetros (sem o id, pois será gerado automaticamente)
     public Loan(LocalDateTime loanDate, LocalDateTime expectedReturnDate, LoanStatus status, User user, Book book) {
         this.loanDate = loanDate;
         this.expectedReturnDate = expectedReturnDate;
@@ -49,7 +41,6 @@ public class Loan implements Serializable {
         this.book = book;
     }
 
-    // Getters e Setters
     public String getId() {
         return id;
     }
@@ -106,13 +97,4 @@ public class Loan implements Serializable {
         this.book = book;
     }
 
-    // Método para verificar se o empréstimo está atrasado
-    public boolean isOverdue() {
-        return LocalDateTime.now().isAfter(expectedReturnDate) && LoanStatus.ACTIVE.equals(status);
-    }
-
-    // Método para verificar se o empréstimo foi devolvido
-    public boolean isReturned() {
-        return LoanStatus.RETURNED.equals(status);
-    }
 }
