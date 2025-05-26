@@ -3,7 +3,6 @@ package br.com.SpringBookstore.SpringBookstore.service;
 import br.com.SpringBookstore.SpringBookstore.domain.Author;
 import br.com.SpringBookstore.SpringBookstore.exception.BusinessLogicException;
 import br.com.SpringBookstore.SpringBookstore.repository.AuthorRepository;
-import br.com.SpringBookstore.SpringBookstore.repository.BookRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
@@ -13,9 +12,6 @@ public class AuthorService {
 
     @Autowired
     private AuthorRepository autorRepository;
-
-    @Autowired
-    private BookRepository bookRepository;
 
 
     public List<Author> findAll() {
