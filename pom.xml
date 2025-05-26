@@ -23,28 +23,26 @@
 		<java.version>17</java.version>
 	</properties>
 
-	<!-- Dependências -->
+
 	<dependencies>
-		<!-- Spring Boot Web (para criar APIs REST) -->
+
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
 
-		<!-- Spring Boot Data MongoDB (para integração com MongoDB) -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-mongodb</artifactId>
 		</dependency>
 
-		<!-- Springdoc OpenAPI (para documentação da API) -->
+
 		<dependency>
 			<groupId>org.springdoc</groupId>
 			<artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
 			<version>2.2.0</version>
 		</dependency>
 
-		<!-- Testes (opcional, mas recomendado) -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
@@ -62,6 +60,13 @@
 			<artifactId>expressly</artifactId>
 			<version>5.0.0</version>
 		</dependency>
+
+		<dependency>
+			<groupId>com.github.dozermapper</groupId>
+			<artifactId>dozer-core</artifactId>
+			<version>7.0.0</version>
+		</dependency>
+
 	</dependencies>
 
 	<!-- Configuração de Build -->
