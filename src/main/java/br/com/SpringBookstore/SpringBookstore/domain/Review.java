@@ -1,31 +1,34 @@
 package br.com.SpringBookstore.SpringBookstore.domain;
 
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.Size;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.*;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.DBRef;
-import org.springframework.data.mongodb.core.mapping.Document;
+
 
 import java.io.Serial;
 import java.io.Serializable;
 
-@Document(collection = "Review")
+@Entity
+@Table(name = "Reviews")
 public class Review implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 1L;
 
     @Id
-    private String id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
 
     private String comment;
     private Integer rating;
 
-    @DBRef
+    @JsonIgnore
+    @ManyToMany(mappedBy = "Users")
     private User user;
 
-    @DBRef
+    @JsonIgnore
+    @ManyToMany(mappedBy = "Books")
     private Book book;
 
     public Review() {
@@ -38,12 +41,12 @@ public class Review implements Serializable {
         this.book = book;
     }
 
-    // Getters e Setters
-    public String getId() {
+
+    public Long getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

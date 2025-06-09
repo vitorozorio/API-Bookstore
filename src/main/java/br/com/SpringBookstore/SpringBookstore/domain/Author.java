@@ -1,31 +1,34 @@
 package br.com.SpringBookstore.SpringBookstore.domain;
 
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.*;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.DBRef;
-import org.springframework.data.mongodb.core.mapping.Document;
-
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDate;
+
 import java.util.List;
 
-@Document(collection = "Author")
+
+@Entity
+@Table(name = "Authors")
 public class Author implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 1L;
 
     @Id
-    private String id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     private String name;
     private String nacionalidade;
     private LocalDate dataNascimento;
     private String biografia;
 
-    @DBRef
+
+    @JsonIgnore
+    @ManyToMany(mappedBy = "Books")
     private List<Book> books;
 
     public Author() {
@@ -39,11 +42,11 @@ public class Author implements Serializable {
         this.books = books;
     }
 
-    public String getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

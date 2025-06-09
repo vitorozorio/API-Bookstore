@@ -1,6 +1,8 @@
 package br.com.SpringBookstore.SpringBookstore.domain;
 
 import br.com.SpringBookstore.SpringBookstore.domain.enuns.LoanStatus;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
@@ -10,24 +12,28 @@ import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
-@Document(collection = "Loan")
+@Entity
+@Table(name = "Loans")
 public class Loan implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 1L;
 
     @Id
-    private String id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     private LocalDateTime loanDate;
     private LocalDateTime expectedReturnDate;
     private LocalDateTime actualReturnDate;
     private LoanStatus status;
 
-    @DBRef
+    @JsonIgnore
+    @ManyToMany(mappedBy = "Users")
     private User user;
 
-    @DBRef
+    @JsonIgnore
+    @ManyToMany(mappedBy = "Books")
     private Book book;
 
     public Loan() {
@@ -41,11 +47,11 @@ public class Loan implements Serializable {
         this.book = book;
     }
 
-    public String getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

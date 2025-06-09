@@ -1,38 +1,42 @@
 package br.com.SpringBookstore.SpringBookstore.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.*;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.core.mapping.DBRef;
 
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.List;
 
-@Document(collection = "User") // Indica que esta classe representa uma coleção no MongoDB.
+@Entity
+@Table(name = "Users")
 public class User implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 1L;
 
     @Id
-    private String id; // Identificador único do usuário.
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-    private String name; // name do usuário.
-    private String email; // Email do usuário.
-    private String phone; // Telefone do usuário.
-    private String address; // Endereço do usuário.
+    private String name;
+    private String email;
+    private String phone;
+    private String address;
 
-    @DBRef
-    private List<Loan> loans; // Lista de empréstimos associados ao usuário.
+    @JsonIgnore
+    @ManyToMany(mappedBy = "Books")
+    private List<Loan> loans;
 
-    @DBRef
-    private List<Reservation> reservations; // Lista de reservas feitas pelo usuário.
+    @JsonIgnore
+    @ManyToMany(mappedBy = "Books")
+    private List<Reservation> reservations;
 
-    // Construtores
+
     public User() {
     }
 
-    public User(String id, String name, String email, String phone, String address) {
+    public User(Long id, String name, String email, String phone, String address) {
         this.id = id;
         this.name = name;
         this.email = email;
@@ -40,12 +44,12 @@ public class User implements Serializable {
         this.address = address;
     }
 
-    // Getters e Setters
-    public String getId() {
+
+    public Long getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

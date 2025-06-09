@@ -1,25 +1,24 @@
 package br.com.SpringBookstore.SpringBookstore.domain;
 
 import br.com.SpringBookstore.SpringBookstore.domain.enuns.BookStatus;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.*;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.DBRef;
-import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.List;
 
-@Document(collection = "Book")
+@Entity
+@Table(name = "Books")
 public class Book implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 1L;
 
     @Id
-    private String id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     private String title;
     private String isbn;
@@ -28,13 +27,16 @@ public class Book implements Serializable {
     private Integer availableQuantity;
     private BookStatus status;
 
-    @DBRef
+    @JsonIgnore
+    @ManyToMany(mappedBy = "Categories")
     private Category category;
 
-    @DBRef
+    @JsonIgnore
+    @ManyToMany(mappedBy = "Authors")
     private List<Author> authors;
 
-    @DBRef
+    @JsonIgnore
+    @ManyToMany(mappedBy = "Reviews")
     private List<Review> reviews;
 
     public Book() {
@@ -53,11 +55,11 @@ public class Book implements Serializable {
         this.reviews = reviews;
     }
 
-    public String getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
